@@ -16,13 +16,12 @@ class Ship {
   }
 
   private bindEvents() {
-    this.shipDiv.addEventListener('pointerdown', this.handlerShipClick)
+    this.shipDiv.addEventListener('pointerdown', this.handlerShipClick.bind(this));
   }
   
   private handlerShipClick() {
-    console.log('click');
-    console.log(this.isVertical);
+    console.log('inside handlerShipClick');
   }
 }
 
-document.querySelectorAll('js-ship').forEach(elem => new Ship(elem as HTMLDivElement));
+document.querySelectorAll('.js-ship').forEach(elem => new Ship(elem as HTMLDivElement));
