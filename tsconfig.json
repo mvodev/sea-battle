@@ -1,0 +1,19 @@
+{
+  "files": ["src/ts/index.ts"],
+  "compilerOptions": {
+    "target": "es2018",
+    "allowJs": true,
+    "strict": true,
+    "noImplicitAny": true,
+    //"module": "nodenext",
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+  },
+  "exclude": ["dist","node_modules","gulp"]
+}
