@@ -1,0 +1,10 @@
+.ship-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  &__line {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
+}

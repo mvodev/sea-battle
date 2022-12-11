@@ -1,20 +1,38 @@
 .ship{
-  width: 30px;
   border: 1px solid gray;
-}
 
-.ship-1 {
-  height: 30px;
-}
+  &-1{
+    height: 30px;
+    width: 30px;
+  }
 
-.ship-2 {
-  height: 60px;
-}
+  &-2 {
+    width: 60px;
+    height: 30px;
+  }
 
-.ship-3 {
-  height: 90px;
-}
+  &-2.ship_is-vertical {
+    width: 30px;
+    height: 60px;
+  }
 
-.ship-4 {
-  height: 120px;
+  &-3 {
+    width: 90px;
+    height: 30px;
+  }
+
+  &-3.ship_is-vertical {
+    height: 90px;
+    width: 30px;
+  }
+
+  &-4 {
+    width: 120px;
+    height: 30px;
+  }
+
+  &-4.ship_is-vertical{
+    height: 120px;
+    width: 30px;
+  }
 }

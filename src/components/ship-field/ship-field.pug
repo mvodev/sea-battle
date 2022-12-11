@@ -1,13 +1,18 @@
 include ../ship/ship.pug
 
 .ship-field.js-ship-field
-  +ship({size:1})
-  +ship({size:1})
-  +ship({size:1})
-  +ship({size:1})
-  +ship({size:2})
-  +ship({size:2})
-  +ship({size:2})
-  +ship({size:3})
-  +ship({size:3})
-  +ship({size:4})
+  .ship-field__line
+    +ship({size:4, isVertical: false})
+  .ship-field__line
+    +ship({size:3, isVertical: false})
+    +ship({size:3, isVertical: false})
+  .ship-field__line
+    +ship({size:2, isVertical: false})
+    +ship({size:2, isVertical: false})
+    +ship({size:2, isVertical: false})
+  .ship-field__line
+    +ship({size:1})
+    +ship({size:1})
+    +ship({size:1})
+    +ship({size:1})
+  
