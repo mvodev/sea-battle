@@ -1,2 +1,3 @@
-mixin ship({ size } = {})
-  .ship.js-ship(class=`ship-${size}`)
+mixin ship({ size, isVertical = true } = {}) 
+  - const verticalClassName = isVertical ? 'ship_is-vertical' : ''
+  .ship.js-ship(class=`ship-${size} ${verticalClassName}`)
