@@ -1,0 +1,16 @@
+mixin battle-field({ isEnemy } = {})
+  - const columns = ['А','Б','В','Г','Д','Е','Ж','З','И','К']
+  - const enemyClassName = isEnemy ? 'battle-field_is-enemy' : ''
+  .battle-field.js-battle-field(class=enemyClassName)
+    .battle-field__columns
+      each val,index in columns
+        span=val
+    .battle-field__wrapper
+      .battle-field__rows
+        each val, index in columns
+          span=(index+1)
+      .battle-field__game
+        each val,columnsIndex in columns
+          .battle-field__row
+            each val,index in columns
+              .battle-field__cell(data-column=(columnsIndex+1) data-row=(index+1))

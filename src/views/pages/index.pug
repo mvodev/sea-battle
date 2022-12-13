@@ -4,5 +4,7 @@ block variables
   - const title = 'Морской бой'
 
 block content
-  h1 Главная страница 2
+  h1=title
   include ../../components/ship-field/ship-field.pug
+  include ../../components/battle-field/battle-field.pug
+  +battle-field({isEnemy: true})
