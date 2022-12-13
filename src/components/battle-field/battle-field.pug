@@ -1,7 +1,7 @@
 mixin battle-field({ isEnemy } = {})
   - const columns = ['А','Б','В','Г','Д','Е','Ж','З','И','К']
   - const enemyClassName = isEnemy ? 'battle-field_is-enemy' : ''
-  .battle-field.js-battle-field(class=enemyClassName)
+  section.battle-field.js-battle-field(class=enemyClassName)
     .battle-field__columns
       each val,index in columns
         span=val

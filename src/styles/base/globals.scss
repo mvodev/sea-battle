@@ -1,7 +1,16 @@
 @import './reset.scss';
 
+html {
+  font-family: sans-serif;
+}
+
 .sea-battle {
   display: flex;
   flex-direction: column;
   height: 100%;
+  &__scene{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
 }

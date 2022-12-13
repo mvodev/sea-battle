@@ -5,6 +5,7 @@ block variables
 
 block content
   h1=title
-  include ../../components/ship-field/ship-field.pug
-  include ../../components/battle-field/battle-field.pug
-  +battle-field({isEnemy: true})
+  .sea-battle__scene
+    include ../../components/ship-field/ship-field.pug
+    include ../../components/battle-field/battle-field.pug
+    +battle-field({isEnemy: true})
