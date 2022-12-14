@@ -35,8 +35,8 @@
   }
 
   &__cell{
-    width: 30px;
-    height: 30px;
+    width: $ship-size;
+    height: $ship-size;
     border: 1px solid $battle-field-border-color;
   }
 

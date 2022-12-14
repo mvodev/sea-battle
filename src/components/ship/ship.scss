@@ -3,38 +3,38 @@
   cursor: pointer;
 
   &-1{
-    height: 30px;
-    width: 30px;
+    height: $ship-size;
+    width: $ship-size;
   }
 
   &-2 {
-    width: 60px;
-    height: 30px;
+    width: $ship-size * 2;
+    height: $ship-size;
   }
 
   &-2.ship_is-vertical {
-    width: 30px;
-    height: 60px;
+    width: $ship-size;
+    height: $ship-size * 2;
   }
 
   &-3 {
-    width: 90px;
-    height: 30px;
+    width: $ship-size * 3;
+    height: $ship-size;
   }
 
   &-3.ship_is-vertical {
-    height: 90px;
-    width: 30px;
+    height: $ship-size * 3;
+    width: $ship-size;
   }
 
   &-4 {
-    width: 120px;
-    height: 30px;
+    width: $ship-size * 4;
+    height: $ship-size;
   }
 
   &-4.ship_is-vertical{
-    height: 120px;
-    width: 30px;
+    height: $ship-size * 4;
+    width: $ship-size;
   }
 
 }

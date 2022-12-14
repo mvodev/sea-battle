@@ -2,6 +2,7 @@ class Ship {
   private isVertical: boolean | undefined;
   private shipDiv: HTMLDivElement;
   private size: number;
+  private shipSize = 30;
 
   constructor(shipDiv:HTMLDivElement) {
     this.shipDiv = shipDiv;
@@ -30,6 +31,8 @@ class Ship {
   }
   
   private handlerShipClick(event:PointerEvent) {
+    let shiftX = event.clientX - this.shipDiv.getBoundingClientRect().left;
+    let shiftY = event.clientY - this.shipDiv.getBoundingClientRect().top;
     this.shipDiv.style.position = 'absolute';
     this.shipDiv.style.zIndex = '1000';
     let currentDroppable: Element|null = null;
@@ -37,8 +40,8 @@ class Ship {
     document.body.append(this.shipDiv);
 
     const moveAt = (pageX: number, pageY: number) =>  {
-      this.shipDiv.style.left = pageX - this.shipDiv.offsetWidth / 2 + 'px';
-      this.shipDiv.style.top = pageY - this.shipDiv.offsetHeight / 2 + 'px';
+      this.shipDiv.style.left = pageX - shiftX + 'px';
+      this.shipDiv.style.top = pageY - shiftY + 'px';
     }
 
     moveAt(event.pageX, event.pageY);
@@ -84,7 +87,11 @@ class Ship {
   }
 
   private enterDroppable(currentDroppable: Element) {
-    currentDroppable.classList.add('active');
+    if (this.size === 1) {
+      currentDroppable.classList.add('active');
+    } else {
+      currentDroppable.classList.add('active');  
+    }
   }
 }
 
