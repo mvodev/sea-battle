@@ -13,4 +13,4 @@ mixin battle-field({ isEnemy } = {})
         each val,columnsIndex in columns
           .battle-field__row
             each val,index in columns
-              .battle-field__cell(data-column=(columnsIndex+1) data-row=(index+1))
+              .battle-field__cell.js-droppable(data-column=(columnsIndex+1) data-row=(index+1))

@@ -32,6 +32,7 @@ class Ship {
   private handlerShipClick(event:PointerEvent) {
     this.shipDiv.style.position = 'absolute';
     this.shipDiv.style.zIndex = '1000';
+    let currentDroppable: Element|null = null;
 
     document.body.append(this.shipDiv);
 
@@ -44,6 +45,24 @@ class Ship {
 
     const onPointerMove = (event: PointerEvent) => {
       moveAt(event.pageX, event.pageY);
+      this.shipDiv.hidden = true;
+      let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
+      this.shipDiv.hidden = false;
+
+      if (!elemBelow) return;
+
+      let droppableBelow = elemBelow.closest('.js-droppable');
+
+      if (currentDroppable != droppableBelow) {
+
+        if (currentDroppable) {
+          this.leaveDroppable(currentDroppable);
+        }
+        currentDroppable = droppableBelow;
+        if (currentDroppable) {
+          this.enterDroppable(currentDroppable);
+        }
+      }
     }
 
     document.addEventListener('pointermove', onPointerMove);
@@ -59,6 +78,16 @@ class Ship {
     };
 
   }
+
+  private leaveDroppable(currentDroppable: Element) {
+    currentDroppable.classList.remove('active');
+  }
+
+  private enterDroppable(currentDroppable: Element) {
+    currentDroppable.classList.add('active');
+  }
 }
 
 document.querySelectorAll('.js-ship').forEach(elem => new Ship(elem as HTMLDivElement));
+
+
