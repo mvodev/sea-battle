@@ -59,11 +59,11 @@ class Ship {
       if (currentDroppable != droppableBelow) {
 
         if (currentDroppable) {
-          this.leaveDroppable(currentDroppable, shiftX, shiftY);
+          this.handleDroppable(currentDroppable, shiftX, shiftY, 'leave');
         }
         currentDroppable = droppableBelow;
         if (currentDroppable) {
-          this.enterDroppable(currentDroppable, shiftX, shiftX);
+          this.handleDroppable(currentDroppable, shiftX, shiftX, 'enter');
         }
       }
     }
@@ -82,19 +82,23 @@ class Ship {
 
   }
 
-  private leaveDroppable(currentDroppable: Element, shiftX: number, shiftY: number) {
+  private handleDroppable (
+    currentDroppable: Element,
+    shiftX: number,
+    shiftY: number,
+    direction: 'leave' | 'enter') {
     if (this.size === 1) {
-      currentDroppable.classList.remove('active');
+      direction === 'leave' ? currentDroppable.classList.remove('active') :currentDroppable.classList.add('active');
     } else {
       const cellsBefore = Math.floor(shiftX/this.shipSize);
       const cellsAfter = Math.floor(((this.size * this.shipSize) - shiftX)/this.shipSize);
-      currentDroppable.classList.remove('active');
+      direction === 'leave' ? currentDroppable.classList.remove('active') :currentDroppable.classList.add('active');
       if (cellsBefore > 0) {
         let before = cellsBefore;
         let previosCell = currentDroppable.previousElementSibling;
         while (before > 0) {
           if (previosCell) {
-            previosCell.classList.remove('active');
+            direction === 'leave' ? previosCell.classList.remove('active') : previosCell.classList.add('active');
             previosCell = previosCell.previousElementSibling;
           }
           before--;
@@ -105,39 +109,7 @@ class Ship {
         let afterCell = currentDroppable.nextElementSibling;
         while (after > 0) {
           if (afterCell) {
-            afterCell.classList.remove('active');
-            afterCell = afterCell.nextElementSibling;
-          }
-          after--;
-        }
-      }  
-    }
-  }
-
-  private enterDroppable(currentDroppable: Element, shiftX: number, shiftY: number) {
-    if (this.size === 1) {
-      currentDroppable.classList.add('active');
-    } else {
-      const cellsBefore = Math.floor(shiftX/this.shipSize);
-      const cellsAfter = Math.floor(((this.size * this.shipSize) - shiftX)/this.shipSize);
-      currentDroppable.classList.add('active');
-      if (cellsBefore > 0) {
-        let before = cellsBefore;
-        let previosCell = currentDroppable.previousElementSibling;
-        while (before > 0) {
-          if (previosCell) {
-            previosCell.classList.add('active');
-            previosCell = previosCell.previousElementSibling;
-          }
-          before--;
-        }
-      }
-      if (cellsAfter > 0) {
-        let after = cellsAfter;
-        let afterCell = currentDroppable.nextElementSibling;
-        while (after > 0) {
-          if (afterCell) {
-            afterCell.classList.add('active');
+            direction === 'leave' ? afterCell.classList.remove('active') : afterCell.classList.add('active');
             afterCell = afterCell.nextElementSibling;
           }
           after--;
