@@ -1,7 +1,7 @@
 mixin battle-field({ isEnemy } = {})
   - const columns = ['А','Б','В','Г','Д','Е','Ж','З','И','К']
-  - const enemyClassName = isEnemy ? 'battle-field_is-enemy' : ''
-  section.battle-field.js-battle-field(class=enemyClassName)
+  - const enemyClassName = isEnemy ? 'battle-field_enemy' : 'js-droppable'
+  .battle-field.js-battle-field(class=enemyClassName)
     .battle-field__columns
       each val,index in columns
         span=val
@@ -10,7 +10,7 @@ mixin battle-field({ isEnemy } = {})
         each val, index in columns
           span=(index+1)
       .battle-field__game
-        each val,columnsIndex in columns
+        each val,rowIndex in columns
           .battle-field__row
             each val,index in columns
-              .battle-field__cell.js-droppable(data-column=(columnsIndex+1) data-row=(index+1))
+              .battle-field__cell(class=enemyClassName data-column=(index+1) data-row=(rowIndex+1))

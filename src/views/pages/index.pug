@@ -6,6 +6,13 @@ block variables
 block content
   h1.sea-battle__title=title
   .sea-battle__scene
-    include ../../components/ship-field/ship-field.pug
+    section.sea-battle__wrapper
+      h2.sea-battle__subtitle Ваши корабли
+      include ../../components/ship-field/ship-field.pug
     include ../../components/battle-field/battle-field.pug
-    +battle-field({isEnemy: true})
+    section.sea-battle__wrapper
+      h2.sea-battle__subtitle Ваше игровое поле
+      +battle-field()
+    section.sea-battle__wrapper
+      h2.sea-battle__subtitle Противник
+      +battle-field({isEnemy: true})

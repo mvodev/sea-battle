@@ -59,11 +59,11 @@ class Ship {
       if (currentDroppable != droppableBelow) {
 
         if (currentDroppable) {
-          this.leaveDroppable(currentDroppable);
+          this.leaveDroppable(currentDroppable, shiftX, shiftY);
         }
         currentDroppable = droppableBelow;
         if (currentDroppable) {
-          this.enterDroppable(currentDroppable);
+          this.enterDroppable(currentDroppable, shiftX, shiftX);
         }
       }
     }
@@ -82,17 +82,70 @@ class Ship {
 
   }
 
-  private leaveDroppable(currentDroppable: Element) {
-    currentDroppable.classList.remove('active');
+  private leaveDroppable(currentDroppable: Element, shiftX: number, shiftY: number) {
+    if (this.size === 1) {
+      currentDroppable.classList.remove('active');
+    } else {
+      const cellsBefore = Math.floor(shiftX/this.shipSize);
+      const cellsAfter = Math.floor(((this.size * this.shipSize) - shiftX)/this.shipSize);
+      currentDroppable.classList.remove('active');
+      if (cellsBefore > 0) {
+        let before = cellsBefore;
+        let previosCell = currentDroppable.previousElementSibling;
+        while (before > 0) {
+          if (previosCell) {
+            previosCell.classList.remove('active');
+            previosCell = previosCell.previousElementSibling;
+          }
+          before--;
+        }
+      }
+      if (cellsAfter > 0) {
+        let after = cellsAfter;
+        let afterCell = currentDroppable.nextElementSibling;
+        while (after > 0) {
+          if (afterCell) {
+            afterCell.classList.remove('active');
+            afterCell = afterCell.nextElementSibling;
+          }
+          after--;
+        }
+      }  
+    }
   }
 
-  private enterDroppable(currentDroppable: Element) {
+  private enterDroppable(currentDroppable: Element, shiftX: number, shiftY: number) {
     if (this.size === 1) {
       currentDroppable.classList.add('active');
     } else {
-      currentDroppable.classList.add('active');  
+      const cellsBefore = Math.floor(shiftX/this.shipSize);
+      const cellsAfter = Math.floor(((this.size * this.shipSize) - shiftX)/this.shipSize);
+      currentDroppable.classList.add('active');
+      if (cellsBefore > 0) {
+        let before = cellsBefore;
+        let previosCell = currentDroppable.previousElementSibling;
+        while (before > 0) {
+          if (previosCell) {
+            previosCell.classList.add('active');
+            previosCell = previosCell.previousElementSibling;
+          }
+          before--;
+        }
+      }
+      if (cellsAfter > 0) {
+        let after = cellsAfter;
+        let afterCell = currentDroppable.nextElementSibling;
+        while (after > 0) {
+          if (afterCell) {
+            afterCell.classList.add('active');
+            afterCell = afterCell.nextElementSibling;
+          }
+          after--;
+        }
+      }  
     }
   }
+
 }
 
 document.querySelectorAll('.js-ship').forEach(elem => new Ship(elem as HTMLDivElement));
