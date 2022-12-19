@@ -115,4 +115,23 @@ describe('GameField class test', () => {
     expect(positionIsAvailable).toEqual(false);
   });
 
+  it('check true equal true', async () => {
+    // 0 0 0 0 0 0 0 0 4 4 4 4 
+    // 0 0 0 0 0 0 0 0 0 0 
+    // 0 0 0 0 0 0 0 0 0 0 
+    // 0 0 0 0 0 0 0 0 0 0 
+    // 0 0 0 0 0 0 0 0 0 0 
+    // 0 0 0 0 0 0 0 0 0 0 
+    // 0 0 0 0 0 0 0 0 0 0 
+    // 0 0 0 0 0 0 0 0 0 0 
+    // 0 0 0 0 0 0 0 0 0 0 
+    // 0 0 0 0 0 0 0 0 0 0
+
+    layout[2][2] = 0;
+    layout[2][3] = 0;
+    layout[2][4] = 0;
+    const positionIsAvailable = gameField.positionIsAvailable(layout,4,0,8,false);
+    expect(positionIsAvailable).toEqual(false);
+  });
+
 });
