@@ -47,6 +47,8 @@
     width: $ship-size;
     height: $ship-size;
     border: 1px solid $battle-field-border-color;
+    cursor: pointer;
+    flex: 1 0 $ship-size;
   }
 
   &__cell.active{
@@ -58,9 +60,36 @@
     top: 25%;
     left: 25%;
     border-radius: 4px;
+    cursor: pointer;
   }
-  &__generate.hidden {
+
+  &__start-game {
+    background-color: green;
+    position: absolute;
+    top: 25%;
+    left: 132.5px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 80px;
+    height: 40px;
+  }
+
+  &__generate-own {
+    position: absolute;
+    top: 35%;
+    left: 25%;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  &__generate-own.activated {
     position: relative;
+    top: 20px;
+  }
+
+  &__generate.activated {
+    position: relative;
+    top: 5px;
   }
 
 }

@@ -50,7 +50,7 @@ class GameField {
       downRowToCheck = row +1 >= this.FIELD_SIZE ? this.FIELD_SIZE -1 : row +1;
     }
     let leftColumnToCheck = column -1 < 0 ? 0 : column - 1;
-    let rightColumnToCheck;
+    let rightColumnToCheck:number;
     if (isVertical) {
       rightColumnToCheck = column + 1 >= this.FIELD_SIZE ? this.FIELD_SIZE -1 : column + 1;
     } else {
@@ -69,20 +69,22 @@ class GameField {
   generateLayout() {
     const layout = this.initializeLayout();
     const shipsSizes = [
+      this.doubleDeck,
+      this.doubleDeck,
+      this.doubleDeck,
+      this.singleDeck,
+      this.singleDeck,
+      this.singleDeck,
+      this.singleDeck,
       this.fourDeck,
       this.tripleDeck,
       this.tripleDeck,
-      this.doubleDeck,
-      this.doubleDeck,
-      this.doubleDeck,
-      this.singleDeck,
-      this.singleDeck,
-      this.singleDeck,
-      this.singleDeck,
     ];
+    const obj:any = {};
     while (shipsSizes.length > 0) {
       const shipSize = shipsSizes.pop() as number;
       while (true) {
+        const date = Date.now();
         const row = Math.floor(Math.random() * this.FIELD_SIZE);
         const column = Math.floor(Math.random() * this.FIELD_SIZE);
         const isVertical = Math.floor(Math.random() * 2) === 0 ? true: false;
@@ -100,6 +102,15 @@ class GameField {
             }
           }
           break;
+        }
+        const date2 = Date.now();
+        if (date2 - date > 100) {
+          obj.shipSize = shipSize;
+          obj.row = row;
+          obj.column = column;
+          obj.isVertical = isVertical;
+          console.log('obj');
+          console.log(obj);
         }
       }
     }
