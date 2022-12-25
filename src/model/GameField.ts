@@ -1,4 +1,4 @@
-class GameField {
+export class GameField {
   private empty: number;
   private singleDeck: number;
   private doubleDeck: number;

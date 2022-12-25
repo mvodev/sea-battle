@@ -5,10 +5,14 @@ class BattleField {
   private battleField: Element | null;
   private gamerCells: NodeListOf<Element>;
   private generateBtnOwn: Element | null;
+  private gamerLayout: number[][];
+  private enemyLayout: number[][];
 
   constructor() {
     this.generateBtn = document.querySelector('.js-battle-field__generate');
     this.generateBtnOwn = document.querySelector('.js-battle-field__generate-own');
+    this.gamerLayout= gameField.generateLayout();
+    this.enemyLayout= gameField.generateLayout();
     this.battleField  = document.querySelectorAll('.js-battle-field:not(.js-battle-field_enemy)')[0]; 
     this.gamerCells = this.battleField.querySelectorAll('.js-battle-field__cell');
     this.bindEvents();
@@ -32,8 +36,7 @@ class BattleField {
     if (this.generateBtnOwn) {
       this.generateBtnOwn.classList.add('activated');
     }
-    const layout = gameField.generateLayout();
-    layout.forEach((row,rowIndex) => {
+    this.gamerLayout.forEach((row,rowIndex) => {
       row.forEach((cell, columnIndex) => {
         if (cell !== 0) {
           this.gamerCells.forEach(cellField => {
