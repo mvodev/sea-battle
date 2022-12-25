@@ -1,6 +1,6 @@
 import { gameField } from '../../model/GameField';
 
-class BattleField {
+export class BattleField {
   private generateBtn: Element | null;
   private battleField: Element | null;
   private gamerCells: NodeListOf<Element>;
@@ -49,5 +49,3 @@ class BattleField {
     })
   }
 }
-
-export const battleField = new BattleField();

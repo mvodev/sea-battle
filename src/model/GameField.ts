@@ -80,11 +80,9 @@ export class GameField {
       this.tripleDeck,
       this.tripleDeck,
     ];
-    const obj:any = {};
     while (shipsSizes.length > 0) {
       const shipSize = shipsSizes.pop() as number;
       while (true) {
-        const date = Date.now();
         const row = Math.floor(Math.random() * this.FIELD_SIZE);
         const column = Math.floor(Math.random() * this.FIELD_SIZE);
         const isVertical = Math.floor(Math.random() * 2) === 0 ? true: false;
@@ -102,15 +100,6 @@ export class GameField {
             }
           }
           break;
-        }
-        const date2 = Date.now();
-        if (date2 - date > 100) {
-          obj.shipSize = shipSize;
-          obj.row = row;
-          obj.column = column;
-          obj.isVertical = isVertical;
-          console.log('obj');
-          console.log(obj);
         }
       }
     }

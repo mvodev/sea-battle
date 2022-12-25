@@ -7,6 +7,7 @@ export const fsm = new StateMachine({
       { name: 'resulting',   from: ['gamerturn','enemyturn'], to: 'result'  },
       { name: 'gamer', from: 'enemyturn', to: 'gamerturn'},
       { name: 'enemy', from: 'gamerturn', to: 'enemyturn'},
+      { name: 'reseting', from: 'result', to: 'start' },
       { name: 'reset', from: '*', to: 'start' },
     ],
     methods: {
@@ -16,3 +17,5 @@ export const fsm = new StateMachine({
       onEnemy: function() { console.log('I enemy') }
     }
   });
+
+  export type MessagesType = 'start' | 'gamerturn' | 'enemyturn' | 'result' | 'reset' | 'init';
