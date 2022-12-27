@@ -17,9 +17,9 @@ class EventObservable implements IObservable {
     this.observers = this.observers.filter((subscriber) => subscriber !== o);
   }
 
-  notifyObservers(eventType: any, message: MessagesType): void {
+  notifyObservers( eventType: MessagesType, message?: any): void {
     this.observers.forEach((elem) => {
-      elem.handleEvent(message, eventType);
+      elem.handleEvent(eventType, message);
     });
   }
 }

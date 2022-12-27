@@ -1,17 +1,30 @@
-export class GameField {
+import { MessagesType } from "../controller/FSM";
+import EventObservable from "../observers/EventObservable";
+import IObserver from "../observers/IObserver";
+
+export class GameField extends EventObservable implements IObserver{
   private empty: number;
   private singleDeck: number;
   private doubleDeck: number;
   private tripleDeck: number;
   private fourDeck: number;
   private FIELD_SIZE = 10;
+  private gamerLayout: Array<Array<number>> = [];
 
   constructor() {
+    super();
     this.empty = 0;
     this.singleDeck = 1;
     this.doubleDeck = 2;
     this.tripleDeck = 3;
     this.fourDeck = 4;
+  }
+
+  handleEvent(eventType: MessagesType, message?: any): void {
+    if (eventType==='init') {
+      this.gamerLayout = this.generateLayout();
+      this.notifyObservers('init', this.gamerLayout);
+    }
   }
 
   getFieldSize() {
