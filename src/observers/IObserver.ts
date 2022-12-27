@@ -1,6 +1,7 @@
-import { MessagesType } from '../controller/FSM';
+import { MessagesType } from '../controller/Controller';
 
 interface IObserver {
   handleEvent(eventType: MessagesType, message?: any): void;
 }
+
 export default IObserver;

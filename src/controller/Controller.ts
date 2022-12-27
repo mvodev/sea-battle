@@ -1,10 +1,11 @@
 import StateMachine from 'javascript-state-machine';
 
 import { GameField } from "../model/GameField";
-import { MessagesType } from "./FSM";
 import { BattleField } from '../components/battle-field/battle-field';
 import IObserver from "../observers/IObserver";
 import EventObservable from '../observers/EventObservable';
+
+export type MessagesType = 'gamerturn' | 'enemyturn' | 'result' | 'reset' | 'init' | 'start';
 
 class Controller extends EventObservable implements IObserver{
   private model: GameField;

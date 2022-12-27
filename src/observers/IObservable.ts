@@ -1,4 +1,4 @@
-import { MessagesType } from '../controller/FSM';
+import { MessagesType } from '../controller/Controller';
 import IObserver from './IObserver';
 
 interface IObservable {
@@ -6,4 +6,5 @@ interface IObservable {
   removeObserver(o: IObserver): void;
   notifyObservers(eventType: any, message: MessagesType): void;
 }
+
 export default IObservable;

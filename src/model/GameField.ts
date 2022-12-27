@@ -1,4 +1,4 @@
-import { MessagesType } from "../controller/FSM";
+import { MessagesType } from "../controller/Controller";
 import EventObservable from "../observers/EventObservable";
 import IObserver from "../observers/IObserver";
 
@@ -52,23 +52,29 @@ export class GameField extends EventObservable implements IObserver{
     if (isVertical && (row + shipSize -1) >= this.FIELD_SIZE ) {
       return false;
     }
+
     if (!isVertical && (column + shipSize -1) >= this.FIELD_SIZE) {
       return false;
     }
+
     let upRowToCheck = row -1 >=0 ? row -1 : 0;
     let downRowToCheck;
+
     if (isVertical) {
       downRowToCheck = row + shipSize +1 >= this.FIELD_SIZE ? this.FIELD_SIZE -1 : row + shipSize +1; 
     } else {
       downRowToCheck = row +1 >= this.FIELD_SIZE ? this.FIELD_SIZE -1 : row +1;
     }
+
     let leftColumnToCheck = column -1 < 0 ? 0 : column - 1;
     let rightColumnToCheck:number;
+
     if (isVertical) {
       rightColumnToCheck = column + 1 >= this.FIELD_SIZE ? this.FIELD_SIZE -1 : column + 1;
     } else {
       rightColumnToCheck = column + shipSize +1 >= this.FIELD_SIZE ? this.FIELD_SIZE -1 : column + shipSize +1;
     }
+
     for (let row = upRowToCheck; row <= downRowToCheck; row++) {
       for (let column = leftColumnToCheck; column <= rightColumnToCheck; column++) {
         if (layout[row][column] !== this.empty) {
@@ -76,6 +82,7 @@ export class GameField extends EventObservable implements IObserver{
         }
       }
     }
+
     return true;
   }
 

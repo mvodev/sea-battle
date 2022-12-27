@@ -1,4 +1,4 @@
-import { MessagesType } from '../../controller/FSM';
+import { MessagesType } from '../../controller/Controller';
 import { gameField } from '../../model/GameField';
 import EventObservable from '../../observers/EventObservable';
 import IObserver from '../../observers/IObserver';

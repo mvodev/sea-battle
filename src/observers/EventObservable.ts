@@ -1,4 +1,4 @@
-import { MessagesType } from '../controller/FSM';
+import { MessagesType } from '../controller/Controller';
 import IObservable from './IObservable';
 import IObserver from './IObserver';
 
@@ -23,4 +23,5 @@ class EventObservable implements IObservable {
     });
   }
 }
+
 export default EventObservable;

@@ -38,6 +38,7 @@
   "author": "Vadim Manushin <vadimmanushin@yandex.ru>",
   "license": "ISC",
   "devDependencies": {
+    "@types/javascript-state-machine": "^2.4.3",
     "@types/jest": "^29.2.4",
     "autoprefixer": "10.4.0",
     "browser-sync": "2.27.7",

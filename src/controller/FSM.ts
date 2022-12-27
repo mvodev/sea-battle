@@ -1,1 +1,0 @@
-export type MessagesType = 'gamerturn' | 'enemyturn' | 'result' | 'reset' | 'init' | 'start';
