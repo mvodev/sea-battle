@@ -1,4 +1,4 @@
-import { gameField } from '../model/GameField';
+import { gameField } from '../model/GameFieldModel';
 
 describe('GameField class test', () => {
 

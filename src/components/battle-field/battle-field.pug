@@ -16,7 +16,8 @@ mixin battle-field({ isEnemy } = {})
             each val,index in columns
               .battle-field__cell.js-battle-field__cell(class=enemyClassName data-column=(index) data-row=(rowIndex) data-id=(counter++))        
     if !isEnemy
-      button.battle-field__generate.js-battle-field__generate Сгенерировать расстановку
+      button.battle-field__generate-btn.js-battle-field__generate-btn Сгенерировать расстановку
       button.battle-field__generate-own.js-battle-field__generate-own Расставить самостоятельно
+      button.battle-field__stop-btn.battle-field_game-is-active.js-battle-field__stop-btn Стоп игра
     else 
       button.battle-field__start-game.js-battle-field__start-game Играть

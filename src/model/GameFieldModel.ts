@@ -10,6 +10,7 @@ export class GameField extends EventObservable implements IObserver{
   private fourDeck: number;
   private FIELD_SIZE = 10;
   private gamerLayout: Array<Array<number>> = [];
+  private enemyLayout: Array<Array<number>> = [];
 
   constructor() {
     super();
@@ -21,9 +22,15 @@ export class GameField extends EventObservable implements IObserver{
   }
 
   handleEvent(eventType: MessagesType, message?: any): void {
-    if (eventType==='init') {
-      this.gamerLayout = this.generateLayout();
-      this.notifyObservers('init', this.gamerLayout);
+    switch(eventType) {
+      case 'start':
+        this.gamerLayout = this.generateLayout();
+        this.enemyLayout = this.generateLayout();
+        this.notifyObservers('start', this.gamerLayout);
+        break;
+      case 'gamerturn':
+        this.notifyObservers('gamerturn');
+        break;
     }
   }
 
