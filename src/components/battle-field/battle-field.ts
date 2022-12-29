@@ -11,18 +11,13 @@ export class BattleField extends EventObservable implements IObserver{
   private enemyCells: NodeListOf<Element>;
   private gamerCells: NodeListOf<Element>;
   private generateBtnOwn: Element | null;
-  private gamerLayout: number[][];
 
   constructor(gamerLayout:number[][]) {
     super();
-    this.gamerLayout = gamerLayout;
     this.generateBtn = document.querySelector('.js-battle-field__generate-btn');
     this.generateBtnOwn = document.querySelector('.js-battle-field__generate-own');
     this.stopGameBtn = document.querySelector('.js-battle-field__stop-btn');
     this.startGameBtn = document.querySelector('.js-battle-field__start-game');
-    if (this.startGameBtn) {
-      this.startGameBtn.disabled = true;
-    }
     this.battleField  = document.querySelectorAll('.js-battle-field:not(.js-battle-field_enemy)')[0]; 
     this.enemyCells  = document.querySelectorAll('.js-battle-field__cell.js-battle-field_enemy');
     this.gamerCells = this.battleField.querySelectorAll('.js-battle-field__cell');
@@ -34,20 +29,14 @@ export class BattleField extends EventObservable implements IObserver{
       this.drawGamerLayout(message);
       this.generateBtn?.classList.add('battle-field_game-is-active');
       this.generateBtnOwn?.classList.add('battle-field_game-is-active');
-      if (this.startGameBtn) {
-        this.startGameBtn.disabled = false;
-      }
+      this.startGameBtn?.classList.add('battle-field_game-is-active');
     } else if (eventType === 'gamerturn') {
-      if (this.startGameBtn) {
-        this.startGameBtn.classList.add('battle-field_game-is-active');
-      }
-      if (this.stopGameBtn) {
-        this.stopGameBtn.classList.remove('battle-field_game-is-active');
-      }
+      this.startGameBtn?.classList.add('battle-field_game-is-active');
+      this.stopGameBtn?.classList.remove('battle-field_game-is-active');
     }
   }
 
-  private bindEvents() {
+  private bindEvents = () => {
     this.generateBtn?.addEventListener('pointerdown', this.handleGenerate);
     this.startGameBtn?.addEventListener('pointerdown', this.handleStartGame);
     this.stopGameBtn?.addEventListener('pointerdown', this.handleStopGame);
@@ -59,27 +48,14 @@ export class BattleField extends EventObservable implements IObserver{
   }
 
   private handleStopGame = () =>{
-    // this.stopGameBtn?.classList.add('battle-field_game-is-active');
-    // this.startGameBtn?.classList.remove('battle-field_game-is-active');
-    // this.generateBtn?.classList.remove('battle-field_game-is-active');
-    // this.generateBtnOwn?.classList.remove('battle-field_game-is-active');
-    // this.redrawEmptyField();
     this.notifyObservers('reset');
-  }
-
-  changeGamerLayout(newLayout: number[][]) {
-    this.gamerLayout = newLayout;
   }
 
   private handleStartGame = () => {
     this.notifyObservers('gamerturn');
-    // this.stopGameBtn?.classList.remove('battle-field_game-is-active');
-    // this.startGameBtn?.classList.add('battle-field_game-is-active');
-    // this.generateBtn?.classList.add('battle-field_game-is-active');
-    // this.generateBtnOwn?.classList.add('battle-field_game-is-active');
   }
 
-  private redrawEmptyField() {
+  private redrawEmptyField = () => {
     this.gamerCells.forEach(cell => {
       cell.classList.remove('js-battle-field__ship');
       cell.classList.remove('battle-field__ship');
@@ -103,6 +79,6 @@ export class BattleField extends EventObservable implements IObserver{
   }
 
   private handleGenerate = () => {
-    this.notifyObservers('start');
+    this.notifyObservers('start'); 
   }
 }
