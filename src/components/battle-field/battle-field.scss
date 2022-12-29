@@ -56,6 +56,9 @@
   &__cell.active{
     background-color: yellow;
   }
+  &__cell.battle-field_enemy:hover{
+    background-color: $battle-field-enemy-color-hover;
+  }
 
   &__generate-btn,
   &__generate-own,
