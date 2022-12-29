@@ -8,6 +8,7 @@ export class BattleField extends EventObservable implements IObserver{
   private startGameBtn: HTMLButtonElement | null;
   private stopGameBtn: Element | null;
   private battleField: Element | null;
+  private enemyCells: NodeListOf<Element>;
   private gamerCells: NodeListOf<Element>;
   private generateBtnOwn: Element | null;
   private gamerLayout: number[][];
@@ -20,10 +21,10 @@ export class BattleField extends EventObservable implements IObserver{
     this.stopGameBtn = document.querySelector('.js-battle-field__stop-btn');
     this.startGameBtn = document.querySelector('.js-battle-field__start-game');
     if (this.startGameBtn) {
-        this.startGameBtn.disabled = true;
-      }
-    this.gamerLayout= gameField.generateLayout();
+      this.startGameBtn.disabled = true;
+    }
     this.battleField  = document.querySelectorAll('.js-battle-field:not(.js-battle-field_enemy)')[0]; 
+    this.enemyCells  = document.querySelectorAll('.js-battle-field__cell.js-battle-field_enemy');
     this.gamerCells = this.battleField.querySelectorAll('.js-battle-field__cell');
     this.bindEvents();
   }
@@ -50,6 +51,11 @@ export class BattleField extends EventObservable implements IObserver{
     this.generateBtn?.addEventListener('pointerdown', this.handleGenerate);
     this.startGameBtn?.addEventListener('pointerdown', this.handleStartGame);
     this.stopGameBtn?.addEventListener('pointerdown', this.handleStopGame);
+    this.enemyCells.forEach(cell => cell.addEventListener('pointerdown',this.handleEnemyField));
+  }
+
+  private handleEnemyField = (e:Event) => {
+    console.log(e);
   }
 
   private handleStopGame = () =>{
