@@ -75,6 +75,9 @@
     background-color: green;
     top: 25%;
   }
+  &__start-game.battle-field_game-is-active {
+    display: none;
+  }
 
   &__start-game.battle-field_game-is-active{
     display: none;
@@ -92,6 +95,10 @@
   &__generate-btn.battle-field_game-is-active {
     position: relative;
     top: 5px;
+  }
+
+  &__ship {
+    background-color: $battle-field-border-color;
   }
 
   &__stop-btn {

@@ -19,6 +19,7 @@ class Controller extends EventObservable implements IObserver{
     init: 'start',
       transitions: [
         { name: 'starting', from: 'start', to: 'initialyzing' },
+        { name: 'generating', from: 'initialyzing', to: 'initialyzing' },
         { name: 'game', from: 'initialyzing', to: 'gamerturn' },
         { name: 'resulting',   from: ['gamerturn','enemyturn'], to: 'result' },
         { name: 'gamer', from: 'enemyturn', to: 'gamerturn'},
@@ -27,7 +28,8 @@ class Controller extends EventObservable implements IObserver{
       ],
       methods: {
         onStarting: this.onStarting,
-        onGamer: function() { console.log('I gamer') },
+        onGenerating: this.onStarting,
+        onGame: this.onGame,
         onEnemy: function() { console.log('I enemy') },
         onExiting: function() { console.log('I exit') },
         onReset: function() { console.log('I reseting') },
@@ -42,11 +44,19 @@ class Controller extends EventObservable implements IObserver{
   handleEvent(eventType: MessagesType, message?: any): void {
     if (eventType === 'start' && this.fsm.state !== 'initialyzing') {
       this.fsm.starting();
+    } else if (eventType === 'start') {
+      this.fsm.generating();
+    } else if (eventType === 'gamerturn') {
+      this.fsm.game();
     }
   }
 
   private onStarting = () => {
     this.notifyObservers('start');
+  }
+
+  private onGame = () => {
+    this.notifyObservers('gamerturn');
   }
 }
 export const controller = new Controller();

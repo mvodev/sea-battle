@@ -5,7 +5,7 @@ import IObserver from '../../observers/IObserver';
 
 export class BattleField extends EventObservable implements IObserver{
   private generateBtn: Element | null;
-  private startGameBtn: Element | null;
+  private startGameBtn: HTMLButtonElement | null;
   private stopGameBtn: Element | null;
   private battleField: Element | null;
   private gamerCells: NodeListOf<Element>;
@@ -19,6 +19,9 @@ export class BattleField extends EventObservable implements IObserver{
     this.generateBtnOwn = document.querySelector('.js-battle-field__generate-own');
     this.stopGameBtn = document.querySelector('.js-battle-field__stop-btn');
     this.startGameBtn = document.querySelector('.js-battle-field__start-game');
+    if (this.startGameBtn) {
+        this.startGameBtn.disabled = true;
+      }
     this.gamerLayout= gameField.generateLayout();
     this.battleField  = document.querySelectorAll('.js-battle-field:not(.js-battle-field_enemy)')[0]; 
     this.gamerCells = this.battleField.querySelectorAll('.js-battle-field__cell');
@@ -28,8 +31,18 @@ export class BattleField extends EventObservable implements IObserver{
   handleEvent(eventType: MessagesType, message?: any): void {
     if (eventType === 'start') {
       this.drawGamerLayout(message);
+      this.generateBtn?.classList.add('battle-field_game-is-active');
+      this.generateBtnOwn?.classList.add('battle-field_game-is-active');
+      if (this.startGameBtn) {
+        this.startGameBtn.disabled = false;
+      }
     } else if (eventType === 'gamerturn') {
-      console.log('start');
+      if (this.startGameBtn) {
+        this.startGameBtn.classList.add('battle-field_game-is-active');
+      }
+      if (this.stopGameBtn) {
+        this.stopGameBtn.classList.remove('battle-field_game-is-active');
+      }
     }
   }
 
@@ -53,7 +66,7 @@ export class BattleField extends EventObservable implements IObserver{
   }
 
   private handleStartGame = () => {
-    this.notifyObservers('start');
+    this.notifyObservers('gamerturn');
     // this.stopGameBtn?.classList.remove('battle-field_game-is-active');
     // this.startGameBtn?.classList.add('battle-field_game-is-active');
     // this.generateBtn?.classList.add('battle-field_game-is-active');
@@ -61,7 +74,10 @@ export class BattleField extends EventObservable implements IObserver{
   }
 
   private redrawEmptyField() {
-    this.gamerCells.forEach(cell => cell.innerHTML = '');
+    this.gamerCells.forEach(cell => {
+      cell.classList.remove('js-battle-field__ship');
+      cell.classList.remove('battle-field__ship');
+    });
   }
 
   private drawGamerLayout = (gamerLayout: Array<Array<number>>) => {
@@ -71,7 +87,8 @@ export class BattleField extends EventObservable implements IObserver{
         if (cell !== 0) {
           this.gamerCells.forEach(cellField => {
             if (cellField.getAttribute(`data-id`)===`${(rowIndex*10)+columnIndex}`){
-              cellField.innerHTML = `${cell}`;
+              cellField.classList.add('js-battle-field__ship');
+              cellField.classList.add('battle-field__ship');
             }
           })
         }
@@ -81,7 +98,5 @@ export class BattleField extends EventObservable implements IObserver{
 
   private handleGenerate = () => {
     this.notifyObservers('start');
-    this.generateBtn?.classList.add('battle-field_game-is-active');
-    this.generateBtnOwn?.classList.add('battle-field_game-is-active');
   }
 }
