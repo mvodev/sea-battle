@@ -12,7 +12,7 @@ block content
     include ../../components/battle-field/battle-field.pug
     section.sea-battle__wrapper
       h2.sea-battle__subtitle Ваше игровое поле
-      +battle-field()
+      +battle-field({ columns:['А','Б','В','Г','Д','Е','Ж','З','И','К'] })
     section.sea-battle__wrapper
       h2.sea-battle__subtitle Противник
-      +battle-field({isEnemy: true})
+      +battle-field({ columns:['А','Б','В','Г','Д','Е','Ж','З','И','К'], isEnemy: true })

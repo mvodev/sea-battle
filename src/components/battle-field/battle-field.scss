@@ -53,16 +53,16 @@
     flex: 1 0 $ship-size;
   }
 
-  &__cell.active{
+  &__cell.active {
     background-color: yellow;
   }
-  &__cell.battle-field_enemy:hover{
+  &__cell.battle-field_enemy:hover {
     background-color: $battle-field-enemy-color-hover;
   }
 
   &__generate-btn,
   &__generate-own,
-  &__start-game{
+  &__start-game {
     position: absolute;
     border-radius: 4px;
     cursor: pointer;

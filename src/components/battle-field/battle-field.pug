@@ -1,5 +1,4 @@
-mixin battle-field({ isEnemy } = {})
-  - const columns = ['А','Б','В','Г','Д','Е','Ж','З','И','К']
+mixin battle-field({ isEnemy,columns } = {})
   - const enemyClassName = isEnemy ? 'battle-field_enemy js-battle-field_enemy' : 'js-droppable'
   - let counter = 0
   .battle-field.js-battle-field(class=enemyClassName)
