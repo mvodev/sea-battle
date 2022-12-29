@@ -35,7 +35,7 @@ class Controller extends EventObservable implements IObserver{
         onReset: function() { console.log('I reseting') },
       }
     });
-    this.view = new BattleField(this.model.generateLayout());
+    this.view = new BattleField();
     this.view.addObserver(this);
     this.addObserver(this.model);
     this.model.addObserver(this.view);

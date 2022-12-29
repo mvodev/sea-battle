@@ -12,7 +12,7 @@ export class BattleField extends EventObservable implements IObserver{
   private gamerCells: NodeListOf<Element>;
   private generateBtnOwn: Element | null;
 
-  constructor(gamerLayout:number[][]) {
+  constructor() {
     super();
     this.generateBtn = document.querySelector('.js-battle-field__generate-btn');
     this.generateBtnOwn = document.querySelector('.js-battle-field__generate-own');
@@ -29,7 +29,7 @@ export class BattleField extends EventObservable implements IObserver{
       this.drawGamerLayout(message);
       this.generateBtn?.classList.add('battle-field_game-is-active');
       this.generateBtnOwn?.classList.add('battle-field_game-is-active');
-      this.startGameBtn?.classList.add('battle-field_game-is-active');
+      this.startGameBtn?.classList.remove('battle-field_game-is-active');
     } else if (eventType === 'gamerturn') {
       this.startGameBtn?.classList.add('battle-field_game-is-active');
       this.stopGameBtn?.classList.remove('battle-field_game-is-active');
@@ -44,7 +44,9 @@ export class BattleField extends EventObservable implements IObserver{
   }
 
   private handleEnemyField = (e:Event) => {
-    console.log(e);
+    const target = e.target as HTMLDivElement;
+    const row = target.getAttribute('data-row');
+    const column = target.getAttribute('data-column');
   }
 
   private handleStopGame = () =>{
