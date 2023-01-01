@@ -2,6 +2,7 @@ mixin battle-field({ isEnemy,columns } = {})
   - const enemyClassName = isEnemy ? 'battle-field_enemy js-battle-field_enemy' : 'js-droppable'
   - let counter = 0
   .battle-field.js-battle-field(class=enemyClassName)
+    .battle-field__curtain.js-battle-field__curtain 
     .battle-field__columns
       each val,index in columns
         span=val

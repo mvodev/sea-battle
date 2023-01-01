@@ -6,10 +6,13 @@ export class BattleField extends EventObservable implements IObserver{
   private generateBtn: HTMLButtonElement | null;
   private startGameBtn: HTMLButtonElement | null;
   private stopGameBtn: HTMLButtonElement | null;
-  private battleField: Element | null;
+  private gamerBattleField: Element | null;
+  private enemyBattleField : Element | null;
   private enemyCells: NodeListOf<Element>;
   private gamerCells: NodeListOf<Element>;
   private generateBtnOwn: HTMLButtonElement | null;
+  private gamerCurtain: Element | null;
+  private enemyCurtain: Element | null | undefined;
   private label: HTMLSpanElement | null;
 
   constructor() {
@@ -18,19 +21,14 @@ export class BattleField extends EventObservable implements IObserver{
     this.generateBtnOwn = document.querySelector('.js-battle-field__generate-own');
     this.stopGameBtn = document.querySelector('.js-battle-field__stop-btn');
     this.startGameBtn = document.querySelector('.js-battle-field__start-game');
-    this.battleField  = document.querySelectorAll('.js-battle-field:not(.js-battle-field_enemy)')[0]; 
+    this.gamerBattleField  = document.querySelectorAll('.js-battle-field:not(.js-battle-field_enemy)')[0];
+    this.enemyBattleField = document.querySelector('.js-battle-field.battle-field_enemy')
+    this.gamerCurtain = this.gamerBattleField.querySelector('.js-battle-field__curtain');
+    this.enemyCurtain = this.enemyBattleField?.querySelector('.js-battle-field__curtain');
     this.enemyCells  = document.querySelectorAll('.js-battle-field__cell.js-battle-field_enemy');
-    this.gamerCells = this.battleField.querySelectorAll('.js-battle-field__cell');
+    this.gamerCells = this.gamerBattleField.querySelectorAll('.js-battle-field__cell');
     this.label = document.querySelector('.js-battle-field__hit');
     this.bindEvents();
-  }
-
-  private showLabel() {
-    this.label?.classList.add('battle-field__hit_gamer-turn');
-  }
-
-  private hideLabel() {
-    this.label?.classList.remove('battle-field__hit_gamer-turn');
   }
 
   handleEvent(eventType: MessagesType, message?: Message): void {
@@ -46,6 +44,7 @@ export class BattleField extends EventObservable implements IObserver{
     } else if (eventType === 'gamerturn') {
       this.drawIfHitted(message);
       this.hideLabel();
+      this.showEnemyCurtain();
     } else if (eventType === 'enemyturn') {
       this.showLabel();
     } else if (eventType === 'reset') {
@@ -138,8 +137,25 @@ export class BattleField extends EventObservable implements IObserver{
   private stopGameBtnShow() {
     this.stopGameBtn?.classList.remove('battle-field_game-is-active');
   }
+
   private stopGameBtnRemove() {
     this.stopGameBtn?.classList.add('battle-field_game-is-active');
+  }
+
+  private showLabel() {
+    this.label?.classList.add('battle-field__hit_gamer-turn');
+  }
+
+  private hideLabel() {
+    this.label?.classList.remove('battle-field__hit_gamer-turn');
+  }
+
+  private showEnemyCurtain() {
+    this.enemyCurtain?.classList.add('battle-field__cirtain_is-visible');
+  }
+
+  private hideEnemyCurtain() {
+    this.enemyCurtain?.classList.remove('battle-field__cirtain_is-visible');
   }
 
   private drawIfHitted(message:Message|undefined) {
