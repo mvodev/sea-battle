@@ -3,13 +3,13 @@ import EventObservable, { Message } from '../../observers/EventObservable';
 import IObserver from '../../observers/IObserver';
 
 export class BattleField extends EventObservable implements IObserver{
-  private generateBtn: Element | null;
+  private generateBtn: HTMLButtonElement | null;
   private startGameBtn: HTMLButtonElement | null;
-  private stopGameBtn: Element | null;
+  private stopGameBtn: HTMLButtonElement | null;
   private battleField: Element | null;
   private enemyCells: NodeListOf<Element>;
   private gamerCells: NodeListOf<Element>;
-  private generateBtnOwn: Element | null;
+  private generateBtnOwn: HTMLButtonElement | null;
 
   constructor() {
     super();
@@ -27,11 +27,17 @@ export class BattleField extends EventObservable implements IObserver{
     if (eventType === 'start') {
       this.drawGamerLayout(message?.layout);
       this.generateBtnRemove();
-      this.generateButtonOwnRemove();
+      this.generateBtnOwnRemove();
       this.startGameButtonShow();
     } else if (eventType === 'gamerturn') {
       this.startGameBtnRemove();
-      this.stopGameBtnShow()
+      this.stopGameBtnShow();
+    } else if (eventType === 'reset') {
+      this.redrawEmptyField();
+      this.generateBtnShow();
+      this.generateBtnOwnShow();
+      this.startGameButtonRemove();
+      this.stopGameBtnRemove();
     }
   }
 
@@ -86,13 +92,22 @@ export class BattleField extends EventObservable implements IObserver{
   private generateBtnRemove() {
     this.generateBtn?.classList.add('battle-field_game-is-active');
   }
+  private generateBtnShow() {
+    this.generateBtn?.classList.remove('battle-field_game-is-active');
+  }
 
-  private generateButtonOwnRemove() {
+  private generateBtnOwnRemove() {
     this.generateBtnOwn?.classList.add('battle-field_game-is-active');
+  }
+  private generateBtnOwnShow() {
+    this.generateBtnOwn?.classList.remove('battle-field_game-is-active');
   }
 
   private startGameButtonShow() {
     this.startGameBtn?.classList.remove('battle-field_game-is-active');
+  }
+  private startGameButtonRemove() {
+    this.startGameBtn?.classList.add('battle-field_game-is-active');
   }
 
   private startGameBtnRemove() {
@@ -101,6 +116,9 @@ export class BattleField extends EventObservable implements IObserver{
 
   private stopGameBtnShow() {
     this.stopGameBtn?.classList.remove('battle-field_game-is-active');
+  }
+  private stopGameBtnRemove() {
+    this.stopGameBtn?.classList.add('battle-field_game-is-active');
   }
 
 }

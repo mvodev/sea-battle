@@ -30,9 +30,10 @@ class Controller extends EventObservable implements IObserver{
         onStarting: this.onStarting,
         onGenerating: this.onStarting,
         onGame: this.onGame,
+        onResult: () => console.log('on result'),
+        onGamer: function() { console.log('I gamer') },
         onEnemy: function() { console.log('I enemy') },
-        onExiting: function() { console.log('I exit') },
-        onReset: function() { console.log('I reseting') },
+        onReseting: this.onReset,
       }
     });
     this.view = new BattleField();
@@ -48,6 +49,8 @@ class Controller extends EventObservable implements IObserver{
       this.fsm.generating();
     } else if (eventType === 'gamerturn') {
       this.fsm.game();
+    } else if (eventType === 'reset') {
+      this.fsm.reseting();
     }
   }
 
@@ -57,6 +60,10 @@ class Controller extends EventObservable implements IObserver{
 
   private onGame = () => {
     this.notifyObservers('gamerturn');
+  }
+
+  private onReset = () => {
+    this.notifyObservers('reset');
   }
 }
 export const controller = new Controller();
