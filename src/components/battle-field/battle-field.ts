@@ -3,31 +3,22 @@ import EventObservable, { Message } from '../../observers/EventObservable';
 import IObserver from '../../observers/IObserver';
 
 export class BattleField extends EventObservable implements IObserver{
-  private generateBtn: HTMLButtonElement | null;
-  private startGameBtn: HTMLButtonElement | null;
-  private stopGameBtn: HTMLButtonElement | null;
-  private gamerBattleField: Element | null;
-  private enemyBattleField : Element | null;
-  private enemyCells: NodeListOf<Element>;
-  private gamerCells: NodeListOf<Element>;
-  private generateBtnOwn: HTMLButtonElement | null;
-  private gamerCurtain: Element | null;
+  private generateBtn!: HTMLButtonElement | null;
+  private startGameBtn!: HTMLButtonElement | null;
+  private stopGameBtn!: HTMLButtonElement | null;
+  private gamerBattleField!: Element | null;
+  private enemyBattleField!: Element | null;
+  private enemyCells!: NodeListOf<Element>;
+  private gamerCells!: NodeListOf<Element>;
+  private generateBtnOwn!: HTMLButtonElement | null;
+  private gamerCurtain!: Element | null;
   private enemyCurtain: Element | null | undefined;
-  private label: HTMLSpanElement | null;
+  private label!: HTMLSpanElement | null;
 
   constructor() {
     super();
-    this.generateBtn = document.querySelector('.js-battle-field__generate-btn');
-    this.generateBtnOwn = document.querySelector('.js-battle-field__generate-own');
-    this.stopGameBtn = document.querySelector('.js-battle-field__stop-btn');
-    this.startGameBtn = document.querySelector('.js-battle-field__start-game');
-    this.gamerBattleField  = document.querySelectorAll('.js-battle-field:not(.js-battle-field_enemy)')[0];
-    this.enemyBattleField = document.querySelector('.js-battle-field.battle-field_enemy')
-    this.gamerCurtain = this.gamerBattleField.querySelector('.js-battle-field__curtain');
-    this.enemyCurtain = this.enemyBattleField?.querySelector('.js-battle-field__curtain');
-    this.enemyCells  = document.querySelectorAll('.js-battle-field__cell.js-battle-field_enemy');
-    this.gamerCells = this.gamerBattleField.querySelectorAll('.js-battle-field__cell');
-    this.label = document.querySelector('.js-battle-field__hit');
+    this.findElements();
+    this.showEnemyCurtain();
     this.bindEvents();
   }
 
@@ -42,7 +33,9 @@ export class BattleField extends EventObservable implements IObserver{
       case 'start game':
         this.startGameBtnRemove();
         this.stopGameBtnShow();
+        this.hideEnemyCurtain();
         this.showLabel();
+        this.attachListenersToEnemyField();
         break;
       case 'gamerturn':
         this.drawIfHitted(message);
@@ -58,15 +51,38 @@ export class BattleField extends EventObservable implements IObserver{
         this.generateBtnOwnShow();
         this.startGameButtonRemove();
         this.stopGameBtnRemove();
+        this.showEnemyCurtain();
+        this.detachListenersFromEnemyField();
         break;
     }
+  }
+
+  private detachListenersFromEnemyField = () => {
+    this.enemyCells.forEach(cell => cell.removeEventListener('pointerdown',this.handleEnemyField));
+  }
+
+  private attachListenersToEnemyField = () => {
+    this.enemyCells.forEach(cell => cell.addEventListener('pointerdown',this.handleEnemyField));
+  }
+
+  private findElements() {
+    this.generateBtn = document.querySelector('.js-battle-field__generate-btn');
+    this.generateBtnOwn = document.querySelector('.js-battle-field__generate-own');
+    this.stopGameBtn = document.querySelector('.js-battle-field__stop-btn');
+    this.startGameBtn = document.querySelector('.js-battle-field__start-game');
+    this.gamerBattleField  = document.querySelectorAll('.js-battle-field:not(.js-battle-field_enemy)')[0];
+    this.enemyBattleField = document.querySelector('.js-battle-field.battle-field_enemy')
+    this.gamerCurtain = this.gamerBattleField.querySelector('.js-battle-field__curtain');
+    this.enemyCurtain = this.enemyBattleField?.querySelector('.js-battle-field__curtain');
+    this.enemyCells  = document.querySelectorAll('.js-battle-field__cell.js-battle-field_enemy');
+    this.gamerCells = this.gamerBattleField.querySelectorAll('.js-battle-field__cell');
+    this.label = document.querySelector('.js-battle-field__hit');
   }
 
   private bindEvents = () => {
     this.generateBtn?.addEventListener('pointerdown', this.handleGenerate);
     this.startGameBtn?.addEventListener('pointerdown', this.handleStartGame);
     this.stopGameBtn?.addEventListener('pointerdown', this.handleStopGame);
-    this.enemyCells.forEach(cell => cell.addEventListener('pointerdown',this.handleEnemyField));
   }
 
   private handleEnemyField = (e:Event) => {
