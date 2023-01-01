@@ -27,14 +27,16 @@ export class BattleField extends EventObservable implements IObserver{
   handleEvent(eventType: MessagesType, message?: any): void {
     if (eventType === 'start') {
       this.drawGamerLayout(message);
-      this.generateBtn?.classList.add('battle-field_game-is-active');
-      this.generateBtnOwn?.classList.add('battle-field_game-is-active');
-      this.startGameBtn?.classList.remove('battle-field_game-is-active');
+      this.generateBtnRemove();
+      this.generateButtonOwnRemove();
+      this.startGameButtonShow();
     } else if (eventType === 'gamerturn') {
-      this.startGameBtn?.classList.add('battle-field_game-is-active');
-      this.stopGameBtn?.classList.remove('battle-field_game-is-active');
+      this.startGameBtnRemove();
+      this.stopGameBtnShow()
     }
   }
+
+  
 
   private bindEvents = () => {
     this.generateBtn?.addEventListener('pointerdown', this.handleGenerate);
@@ -49,7 +51,7 @@ export class BattleField extends EventObservable implements IObserver{
     const column = target.getAttribute('data-column');
   }
 
-  private handleStopGame = () =>{
+  private handleStopGame = () => {
     this.notifyObservers('reset');
   }
 
@@ -83,4 +85,25 @@ export class BattleField extends EventObservable implements IObserver{
   private handleGenerate = () => {
     this.notifyObservers('start'); 
   }
+
+  private generateBtnRemove() {
+    this.generateBtn?.classList.add('battle-field_game-is-active');
+  }
+
+  private generateButtonOwnRemove() {
+    this.generateBtnOwn?.classList.add('battle-field_game-is-active');
+  }
+
+  private startGameButtonShow() {
+    this.startGameBtn?.classList.remove('battle-field_game-is-active');
+  }
+
+  private startGameBtnRemove() {
+    this.startGameBtn?.classList.add('battle-field_game-is-active');
+  }
+
+  private stopGameBtnShow() {
+    this.stopGameBtn?.classList.remove('battle-field_game-is-active');
+  }
+
 }
