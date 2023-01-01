@@ -1,4 +1,4 @@
-import { MessagesType } from '../controller/Controller';
+import { MessagesType } from '../controller/сontroller';
 import { Message } from './EventObservable';
 import IObserver from './IObserver';
 

@@ -1,6 +1,6 @@
 import StateMachine from 'javascript-state-machine';
 
-import { GameField } from "../model/GameFieldModel";
+import { GameField } from "../model/game-field-model";
 import { BattleField } from '../components/battle-field/battle-field';
 import IObserver from "../observers/IObserver";
 import EventObservable, { Message } from '../observers/EventObservable';
