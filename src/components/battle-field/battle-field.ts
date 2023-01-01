@@ -32,27 +32,33 @@ export class BattleField extends EventObservable implements IObserver{
   }
 
   handleEvent(eventType: MessagesType, message?: Message): void {
-    if (eventType === 'start') {
-      this.drawGamerLayout(message?.layout);
-      this.generateBtnRemove();
-      this.generateBtnOwnRemove();
-      this.startGameButtonShow();
-    } else if (eventType === 'start game') {
-      this.startGameBtnRemove();
-      this.stopGameBtnShow();
-      this.showLabel();
-    } else if (eventType === 'gamerturn') {
-      this.drawIfHitted(message);
-      this.hideLabel();
-      this.showEnemyCurtain();
-    } else if (eventType === 'enemyturn') {
-      this.showLabel();
-    } else if (eventType === 'reset') {
-      this.redrawEmptyField();
-      this.generateBtnShow();
-      this.generateBtnOwnShow();
-      this.startGameButtonRemove();
-      this.stopGameBtnRemove();
+    switch(eventType) {
+      case 'start':
+        this.drawGamerLayout(message?.layout);
+        this.generateBtnRemove();
+        this.generateBtnOwnRemove();
+        this.startGameButtonShow();
+        break;
+      case 'start game':
+        this.startGameBtnRemove();
+        this.stopGameBtnShow();
+        this.showLabel();
+        break;
+      case 'gamerturn':
+        this.drawIfHitted(message);
+        this.hideLabel();
+        this.showEnemyCurtain();
+        break;
+      case 'enemyturn':
+        this.showLabel();
+        break;
+      case 'reset':
+        this.redrawEmptyField();
+        this.generateBtnShow();
+        this.generateBtnOwnShow();
+        this.startGameButtonRemove();
+        this.stopGameBtnRemove();
+        break;
     }
   }
 
