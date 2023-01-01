@@ -1,9 +1,9 @@
 import { MessagesType } from "../controller/Controller";
-import EventObservable from "../observers/EventObservable";
+import EventObservable, { Message } from "../observers/EventObservable";
 import IObserver from "../observers/IObserver";
 
 export class GameField extends EventObservable implements IObserver{
-  private empty: number;
+  private EMPTY: number;
   private singleDeck: number;
   private doubleDeck: number;
   private tripleDeck: number;
@@ -14,29 +14,44 @@ export class GameField extends EventObservable implements IObserver{
 
   constructor() {
     super();
-    this.empty = 0;
+    this.EMPTY = 0;
     this.singleDeck = 1;
     this.doubleDeck = 2;
     this.tripleDeck = 3;
     this.fourDeck = 4;
   }
 
-  handleEvent(eventType: MessagesType, message?: any): void {
+  handleEvent(eventType: MessagesType, message?: Message): void {
     switch(eventType) {
       case 'start':
         this.gamerLayout = this.generateLayout();
         this.enemyLayout = this.generateLayout();
+        console.log(this.enemyLayout);
         this.notifyObservers('start', {
           layout: this.gamerLayout 
         });
         break;
+      case 'start game':
+        this.notifyObservers('start game');
+        break;
       case 'gamerturn':
-        this.notifyObservers('gamerturn');
+        if (message) {
+          const { row, column } = message;
+          if (row!==undefined && column!==undefined) {
+            const isHitted = this.enemyLayout[row][column] !== this.EMPTY;
+            this.notifyObservers('gamerturn', {
+              isHitted,row,column 
+            });
+          }
+        }
         break;
       case 'reset':
         this.gamerLayout = [];
         this.enemyLayout = [];
         this.notifyObservers('reset');
+        break;
+      case 'enemyturn':
+        this.notifyObservers('enemyturn');
         break;
     }
   }
@@ -50,7 +65,7 @@ export class GameField extends EventObservable implements IObserver{
     for (let i = 0; i < this.FIELD_SIZE; i++) {
       const row:Array<number> = [];
       for (let j = 0; j < this.FIELD_SIZE; j++) {
-        row.push(this.empty);
+        row.push(this.EMPTY);
       }
       field10x10.push(row);
     }
@@ -91,7 +106,7 @@ export class GameField extends EventObservable implements IObserver{
 
     for (let row = upRowToCheck; row <= downRowToCheck; row++) {
       for (let column = leftColumnToCheck; column <= rightColumnToCheck; column++) {
-        if (layout[row][column] !== this.empty) {
+        if (layout[row][column] !== this.EMPTY) {
           return false;
         }
       }

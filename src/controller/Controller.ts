@@ -3,9 +3,9 @@ import StateMachine from 'javascript-state-machine';
 import { GameField } from "../model/GameFieldModel";
 import { BattleField } from '../components/battle-field/battle-field';
 import IObserver from "../observers/IObserver";
-import EventObservable from '../observers/EventObservable';
+import EventObservable, { Message } from '../observers/EventObservable';
 
-export type MessagesType = 'gamerturn' | 'enemyturn' | 'result' | 'reset' | 'start';
+export type MessagesType = 'gamerturn' | 'enemyturn' | 'result' | 'reset' | 'start' | 'start game';
 
 class Controller extends EventObservable implements IObserver{
   private model: GameField;
@@ -32,7 +32,7 @@ class Controller extends EventObservable implements IObserver{
         onGame: this.onGame,
         onResult: () => console.log('on result'),
         onGamer: function() { console.log('I gamer') },
-        onEnemy: function() { console.log('I enemy') },
+        onEnemy: this.onEnemy,
         onReseting: this.onReset,
       }
     });
@@ -43,12 +43,17 @@ class Controller extends EventObservable implements IObserver{
   }
 
   handleEvent(eventType: MessagesType, message?: any): void {
+    console.log(message);
     if (eventType === 'start' && this.fsm.state !== 'generate') {
       this.fsm.starting();
     } else if (eventType === 'start') {
       this.fsm.generating();
-    } else if (eventType === 'gamerturn') {
+    } else if (eventType === 'start game') {
       this.fsm.game();
+    } else if (eventType === 'gamerturn') {
+      this.fsm.enemy(message);
+    } else if (eventType === 'enemyturn') {
+      this.fsm.gamer(message);
     } else if (eventType === 'reset') {
       this.fsm.reseting();
     }
@@ -59,11 +64,16 @@ class Controller extends EventObservable implements IObserver{
   }
 
   private onGame = () => {
-    this.notifyObservers('gamerturn');
+    this.notifyObservers('start game');
   }
 
   private onReset = () => {
     this.notifyObservers('reset');
   }
+
+  private onEnemy = (transtition: any, message:Message) => {
+    this.notifyObservers('gamerturn', message);
+  }
 }
+
 export const controller = new Controller();

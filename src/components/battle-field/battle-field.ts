@@ -29,9 +29,12 @@ export class BattleField extends EventObservable implements IObserver{
       this.generateBtnRemove();
       this.generateBtnOwnRemove();
       this.startGameButtonShow();
-    } else if (eventType === 'gamerturn') {
+    } else if (eventType === 'start game') {
       this.startGameBtnRemove();
       this.stopGameBtnShow();
+    } else if (eventType === 'gamerturn') {
+      this.drawIfHitted(message);
+    } else if (eventType === 'enemyturn') {
     } else if (eventType === 'reset') {
       this.redrawEmptyField();
       this.generateBtnShow();
@@ -50,8 +53,9 @@ export class BattleField extends EventObservable implements IObserver{
 
   private handleEnemyField = (e:Event) => {
     const target = e.target as HTMLDivElement;
-    const row = target.getAttribute('data-row');
-    const column = target.getAttribute('data-column');
+    const row = Number(target.getAttribute('data-row'));
+    const column = Number(target.getAttribute('data-column'));
+    this.notifyObservers('gamerturn', {row,column});
   }
 
   private handleStopGame = () => {
@@ -59,7 +63,7 @@ export class BattleField extends EventObservable implements IObserver{
   }
 
   private handleStartGame = () => {
-    this.notifyObservers('gamerturn');
+    this.notifyObservers('start game');
   }
 
   private redrawEmptyField = () => {
@@ -119,6 +123,21 @@ export class BattleField extends EventObservable implements IObserver{
   }
   private stopGameBtnRemove() {
     this.stopGameBtn?.classList.add('battle-field_game-is-active');
+  }
+
+  private drawIfHitted(message:Message|undefined) {
+    if (message) {
+      const {row,column, isHitted} = message;
+      if (row!==undefined && column!==undefined ) {
+        this.enemyCells.forEach(cell =>{
+          if(cell.getAttribute(`data-id`)===`${(row*10)+column}`) {
+            if (isHitted) {
+              cell.innerHTML = 'X';
+            } else cell.innerHTML = 'O';
+          } 
+        })
+      }
+    }
   }
 
 }

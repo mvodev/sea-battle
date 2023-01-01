@@ -6,6 +6,7 @@ export type Message = {
   row?:number;
   column?:number;
   layout?:number[][];
+  isHitted?: boolean;
 }
 
 class EventObservable implements IObservable {
