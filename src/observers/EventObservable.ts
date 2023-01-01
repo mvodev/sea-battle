@@ -2,6 +2,12 @@ import { MessagesType } from '../controller/Controller';
 import IObservable from './IObservable';
 import IObserver from './IObserver';
 
+export type Message = {
+  row?:number;
+  column?:number;
+  layout?:number[][];
+}
+
 class EventObservable implements IObservable {
   private observers: Array<IObserver>;
 
@@ -17,7 +23,7 @@ class EventObservable implements IObservable {
     this.observers = this.observers.filter((subscriber) => subscriber !== o);
   }
 
-  notifyObservers( eventType: MessagesType, message?: any): void {
+  notifyObservers( eventType: MessagesType, message?: Message): void {
     this.observers.forEach((elem) => {
       elem.handleEvent(eventType, message);
     });

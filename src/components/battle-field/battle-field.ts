@@ -1,6 +1,6 @@
 import { MessagesType } from '../../controller/Controller';
 import { gameField } from '../../model/GameFieldModel';
-import EventObservable from '../../observers/EventObservable';
+import EventObservable, { Message } from '../../observers/EventObservable';
 import IObserver from '../../observers/IObserver';
 
 export class BattleField extends EventObservable implements IObserver{
@@ -24,9 +24,9 @@ export class BattleField extends EventObservable implements IObserver{
     this.bindEvents();
   }
 
-  handleEvent(eventType: MessagesType, message?: any): void {
+  handleEvent(eventType: MessagesType, message?: Message): void {
     if (eventType === 'start') {
-      this.drawGamerLayout(message);
+      this.drawGamerLayout(message?.layout);
       this.generateBtnRemove();
       this.generateButtonOwnRemove();
       this.startGameButtonShow();
@@ -35,8 +35,6 @@ export class BattleField extends EventObservable implements IObserver{
       this.stopGameBtnShow()
     }
   }
-
-  
 
   private bindEvents = () => {
     this.generateBtn?.addEventListener('pointerdown', this.handleGenerate);
@@ -66,9 +64,9 @@ export class BattleField extends EventObservable implements IObserver{
     });
   }
 
-  private drawGamerLayout = (gamerLayout: Array<Array<number>>) => {
+  private drawGamerLayout = (gamerLayout?: Array<Array<number>>) => {
     this.redrawEmptyField();
-    gamerLayout.forEach((row,rowIndex) => {
+    gamerLayout?.forEach((row,rowIndex) => {
       row.forEach((cell, columnIndex) => {
         if (cell !== 0) {
           this.gamerCells.forEach(cellField => {

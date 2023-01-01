@@ -26,7 +26,9 @@ export class GameField extends EventObservable implements IObserver{
       case 'start':
         this.gamerLayout = this.generateLayout();
         this.enemyLayout = this.generateLayout();
-        this.notifyObservers('start', this.gamerLayout);
+        this.notifyObservers('start', {
+          layout: this.gamerLayout 
+        });
         break;
       case 'gamerturn':
         this.notifyObservers('gamerturn');
