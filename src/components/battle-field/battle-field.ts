@@ -70,9 +70,9 @@ export class BattleField extends EventObservable implements IObserver{
   }
 
   private handleEnemyField = (e:Event) => {
-    const target = e.target as HTMLDivElement;
-    const row = Number(target.getAttribute('data-row'));
-    const column = Number(target.getAttribute('data-column'));
+    const battleField = e.target as HTMLDivElement;
+    const row = Number(battleField.getAttribute('data-row'));
+    const column = Number(battleField.getAttribute('data-column'));
     this.notifyObservers('gamerturn', {row,column});
   }
 
