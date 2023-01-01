@@ -10,6 +10,7 @@ export class BattleField extends EventObservable implements IObserver{
   private enemyCells: NodeListOf<Element>;
   private gamerCells: NodeListOf<Element>;
   private generateBtnOwn: HTMLButtonElement | null;
+  private label: HTMLSpanElement | null;
 
   constructor() {
     super();
@@ -20,7 +21,16 @@ export class BattleField extends EventObservable implements IObserver{
     this.battleField  = document.querySelectorAll('.js-battle-field:not(.js-battle-field_enemy)')[0]; 
     this.enemyCells  = document.querySelectorAll('.js-battle-field__cell.js-battle-field_enemy');
     this.gamerCells = this.battleField.querySelectorAll('.js-battle-field__cell');
+    this.label = document.querySelector('.js-battle-field__hit');
     this.bindEvents();
+  }
+
+  private showLabel() {
+    this.label?.classList.add('battle-field__hit_gamer-turn');
+  }
+
+  private hideLabel() {
+    this.label?.classList.remove('battle-field__hit_gamer-turn');
   }
 
   handleEvent(eventType: MessagesType, message?: Message): void {
@@ -32,9 +42,12 @@ export class BattleField extends EventObservable implements IObserver{
     } else if (eventType === 'start game') {
       this.startGameBtnRemove();
       this.stopGameBtnShow();
+      this.showLabel();
     } else if (eventType === 'gamerturn') {
       this.drawIfHitted(message);
+      this.hideLabel();
     } else if (eventType === 'enemyturn') {
+      this.showLabel();
     } else if (eventType === 'reset') {
       this.redrawEmptyField();
       this.generateBtnShow();

@@ -117,4 +117,17 @@
     display: none;
   }
 
+  &__hit {
+    text-align: center;
+    margin-top: 5px;
+    display: none;
+    font-weight: bold;
+    font-size: 2rem;
+    color: rgb(107, 12, 12);
+  }
+
+  &__hit.battle-field__hit_gamer-turn{
+    display: inline;
+  }
+
 }
