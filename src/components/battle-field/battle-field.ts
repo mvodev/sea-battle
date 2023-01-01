@@ -84,6 +84,10 @@ export class BattleField extends EventObservable implements IObserver{
       cell.classList.remove('js-battle-field__ship');
       cell.classList.remove('battle-field__ship');
     });
+    this.enemyCells.forEach(cell=>{
+      cell.classList.remove('battle-field_hitted');
+      cell.classList.remove('battle-field_failed');
+    })
   }
 
   private drawGamerLayout = (gamerLayout?: Array<Array<number>>) => {
@@ -145,8 +149,8 @@ export class BattleField extends EventObservable implements IObserver{
         this.enemyCells.forEach(cell =>{
           if(cell.getAttribute(`data-id`)===`${(row*10)+column}`) {
             if (isHitted) {
-              cell.innerHTML = 'X';
-            } else cell.innerHTML = 'O';
+              cell.classList.add('battle-field_hitted');
+            } else cell.classList.add('battle-field_failed');
           } 
         })
       }
