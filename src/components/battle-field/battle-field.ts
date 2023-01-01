@@ -1,5 +1,4 @@
 import { MessagesType } from '../../controller/Controller';
-import { gameField } from '../../model/GameFieldModel';
 import EventObservable, { Message } from '../../observers/EventObservable';
 import IObserver from '../../observers/IObserver';
 

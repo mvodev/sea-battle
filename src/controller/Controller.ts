@@ -18,13 +18,13 @@ class Controller extends EventObservable implements IObserver{
     this.fsm = new StateMachine({
     init: 'start',
       transitions: [
-        { name: 'starting', from: 'start', to: 'initialyzing' },
-        { name: 'generating', from: 'initialyzing', to: 'initialyzing' },
-        { name: 'game', from: 'initialyzing', to: 'gamerturn' },
+        { name: 'starting', from: 'start', to: 'generate' },
+        { name: 'generating', from: 'generate', to: 'generate' },
+        { name: 'game', from: 'generate', to: 'gamerturn' },
         { name: 'resulting',   from: ['gamerturn','enemyturn'], to: 'result' },
         { name: 'gamer', from: 'enemyturn', to: 'gamerturn'},
         { name: 'enemy', from: 'gamerturn', to: 'enemyturn'},
-        { name: 'reseting', from: '*', to: 'i' },
+        { name: 'reseting', from: '*', to: 'start' },
       ],
       methods: {
         onStarting: this.onStarting,
@@ -42,7 +42,7 @@ class Controller extends EventObservable implements IObserver{
   }
 
   handleEvent(eventType: MessagesType, message?: any): void {
-    if (eventType === 'start' && this.fsm.state !== 'initialyzing') {
+    if (eventType === 'start' && this.fsm.state !== 'generate') {
       this.fsm.starting();
     } else if (eventType === 'start') {
       this.fsm.generating();
