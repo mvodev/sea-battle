@@ -4,10 +4,10 @@ import IObserver from "../observers/IObserver";
 
 export class GameField extends EventObservable implements IObserver{
   private EMPTY: number;
-  private singleDeck: number;
-  private doubleDeck: number;
-  private tripleDeck: number;
-  private fourDeck: number;
+  private SINGLE_DECK: number;
+  private DOUBLE_DECK: number;
+  private TRIPLE_DECK: number;
+  private QUAD_DECK: number;
   private FIELD_SIZE = 10;
   private gamerLayout: Array<Array<number>> = [];
   private enemyLayout: Array<Array<number>> = [];
@@ -15,10 +15,10 @@ export class GameField extends EventObservable implements IObserver{
   constructor() {
     super();
     this.EMPTY = 0;
-    this.singleDeck = 1;
-    this.doubleDeck = 2;
-    this.tripleDeck = 3;
-    this.fourDeck = 4;
+    this.SINGLE_DECK = 1;
+    this.DOUBLE_DECK = 2;
+    this.TRIPLE_DECK = 3;
+    this.QUAD_DECK = 4;
   }
 
   handleEvent(eventType: MessagesType, message?: Message): void {
@@ -118,16 +118,16 @@ export class GameField extends EventObservable implements IObserver{
   generateLayout() {
     const layout = this.initializeLayout();
     const shipsSizes = [
-      this.doubleDeck,
-      this.doubleDeck,
-      this.doubleDeck,
-      this.singleDeck,
-      this.singleDeck,
-      this.singleDeck,
-      this.singleDeck,
-      this.fourDeck,
-      this.tripleDeck,
-      this.tripleDeck,
+      this.DOUBLE_DECK,
+      this.DOUBLE_DECK,
+      this.DOUBLE_DECK,
+      this.SINGLE_DECK,
+      this.SINGLE_DECK,
+      this.SINGLE_DECK,
+      this.SINGLE_DECK,
+      this.QUAD_DECK,
+      this.TRIPLE_DECK,
+      this.TRIPLE_DECK,
     ];
     while (shipsSizes.length > 0) {
       const shipSize = shipsSizes.pop() as number;
