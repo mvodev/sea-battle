@@ -12,8 +12,12 @@ export class GameField extends EventObservable implements IObserver{
   private enemyNumberOfQuantity = 4 + 3*2 + 2*3 + 4*1;
   private gamerNumberOfQuantity = 4 + 3*2 + 2*3 + 4*1;
   private FIELD_SIZE = 10;
-  private gamerLayout: Array<Array<number>> = [];
-  private enemyLayout: Array<Array<number>> = [];
+  private gamerLayout: number[][] = [];
+  private enemyLayout: number[][] = [];
+  private priorityGoals: Array<{
+    row: number;
+    column: number;
+  }> = [];
 
   constructor() {
     super();
@@ -45,15 +49,11 @@ export class GameField extends EventObservable implements IObserver{
             if (isHitted && this.enemyLayout[row][column] !== this.IS_HEATED) {
               this.enemyLayout[row][column] = this.IS_HEATED;
               this.enemyNumberOfQuantity--;
-              const isWin = this.enemyNumberOfQuantity === 0;
-              this.notifyObservers('gamerturn', {
-                isHitted,row,column,isWin
-              });
-            } else {
-              this.notifyObservers('gamerturn', {
-                isHitted,row,column
-              });
-            };
+            } 
+            const isWin = this.enemyNumberOfQuantity === 0;
+            this.notifyObservers('gamerturn', {
+              isHitted,row,column,isWin
+            });
           }
         }
         break;
@@ -63,20 +63,55 @@ export class GameField extends EventObservable implements IObserver{
         this.notifyObservers('reset');
         break;
       case 'enemyturn':
-        let row,column;
-        while(true){
-          row = Math.floor(Math.random() * this.FIELD_SIZE);
-          column = Math.floor(Math.random() * this.FIELD_SIZE);
-          if (this.gamerLayout[row][column] !== this.IS_HEATED) break;
+        let row = 0;
+        let column = 0;
+        if (this.priorityGoals.length >0) {
+          const item = this.priorityGoals.pop();
+          if (item !== undefined) {
+            row = item.row;
+            column = item.column;
+          }
+        } else {
+          while(true) {
+            row = Math.floor(Math.random() * this.FIELD_SIZE);
+            column = Math.floor(Math.random() * this.FIELD_SIZE);
+            if (this.gamerLayout[row][column] !== this.IS_HEATED) break;
+          }
         }
         const isHitted = this.gamerLayout[row][column] !== this.EMPTY;
         this.gamerLayout[row][column] = this.IS_HEATED;
-        if (isHitted) this.gamerNumberOfQuantity--;
+        if (isHitted) {
+          this.gamerNumberOfQuantity--;
+          this.addPriorityGoals(row,column);
+        }
         const isWin = this.gamerNumberOfQuantity === 0;
         this.notifyObservers('enemyturn', {
           isHitted,row,column,isWin
         });
         break;
+    }
+  }
+
+  addPriorityGoals(row: number, column: number) {
+    if (row - 1 >=0 && this.gamerLayout[row-1][column]!== this.IS_HEATED) {
+      this.priorityGoals.push({
+        row:row-1,column
+      });
+    }
+    if (row + 1 < this.FIELD_SIZE && this.gamerLayout[row + 1][column]!== this.IS_HEATED) {
+      this.priorityGoals.push({
+        row:row + 1,column
+      });
+    }
+    if (column -1 >=0 && this.gamerLayout[row][column - 1] !== this.IS_HEATED) {
+      this.priorityGoals.push({
+        row, column: column - 1
+      })
+    }
+    if (column + 1 < this.FIELD_SIZE && this.gamerLayout[row][column + 1] !== this.IS_HEATED) {
+      this.priorityGoals.push({
+        row, column: column + 1
+      })
     }
   }
 

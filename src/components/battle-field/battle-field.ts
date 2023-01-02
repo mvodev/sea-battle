@@ -71,7 +71,7 @@ export class BattleField extends EventObservable implements IObserver{
         this.startGameButtonRemove();
         this.stopGameBtnRemove();
         this.showEnemyCurtain();
-        this.detachListenersFromEnemyField();
+        this.detachListeners();
         this.hideLabel();
         break;
     }
@@ -95,7 +95,7 @@ export class BattleField extends EventObservable implements IObserver{
     }
   }
 
-  private detachListenersFromEnemyField = () => {
+  private detachListeners = () => {
     this.enemyCells.forEach(cell => cell.removeEventListener('pointerdown',this.handleEnemyField));
   }
 
