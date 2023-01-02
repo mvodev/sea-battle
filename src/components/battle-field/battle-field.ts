@@ -135,6 +135,8 @@ export class BattleField extends EventObservable implements IObserver{
     this.gamerCells.forEach(cell => {
       cell.classList.remove('js-battle-field__ship');
       cell.classList.remove('battle-field__ship');
+      cell.classList.remove('battle-field_hitted');
+      cell.classList.remove('battle-field_failed');
     });
     this.enemyCells.forEach(cell=>{
       cell.classList.remove('battle-field_hitted');
