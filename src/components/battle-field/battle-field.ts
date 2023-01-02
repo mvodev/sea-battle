@@ -39,7 +39,6 @@ export class BattleField extends EventObservable implements IObserver{
         this.stopGameBtnShow();
         this.hideEnemyCurtain();
         this.showLabel();
-        this.attachListeners();
         break;
       case 'gamerturn':
         this.drawIfHitted(message,'gamerturn');
@@ -71,7 +70,6 @@ export class BattleField extends EventObservable implements IObserver{
         this.startGameButtonRemove();
         this.stopGameBtnRemove();
         this.showEnemyCurtain();
-        this.detachListeners();
         this.hideLabel();
         break;
     }
@@ -95,10 +93,6 @@ export class BattleField extends EventObservable implements IObserver{
     }
   }
 
-  private detachListeners = () => {
-    this.enemyCells.forEach(cell => cell.removeEventListener('pointerdown',this.handleEnemyField));
-  }
-
   private findElements() {
     this.generateBtn = document.querySelector('.js-battle-field__generate-btn');
     this.generateBtnOwn = document.querySelector('.js-battle-field__generate-own');
@@ -117,9 +111,6 @@ export class BattleField extends EventObservable implements IObserver{
     this.generateBtn?.addEventListener('pointerdown', this.handleGenerate);
     this.startGameBtn?.addEventListener('pointerdown', this.handleStartGame);
     this.stopGameBtn?.addEventListener('pointerdown', this.handleStopGame);
-  }
-
-  private attachListeners() {
     this.enemyCells.forEach(cell => cell.addEventListener('pointerdown',this.handleEnemyField));
   }
 
