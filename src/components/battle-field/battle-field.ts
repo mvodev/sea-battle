@@ -47,6 +47,7 @@ export class BattleField extends EventObservable implements IObserver{
           this.hideLabel();
           this.showEnemyCurtain();
           this.hideGamerCurtain();
+          setTimeout(() => { this.notifyObservers('enemyturn') }, 2000);
         }
         break;
       case 'enemyturn':
@@ -80,7 +81,7 @@ export class BattleField extends EventObservable implements IObserver{
     this.gamerCurtain?.classList.remove('battle-field__cirtain_is-visible');
   }
 
-  showWin(message: Message | undefined, field: 'gamerturn' | 'enemyturn') {
+  private showWin(message: Message | undefined, field: 'gamerturn' | 'enemyturn') {
     if (this.label && message?.isWin) {
       this.showEnemyCurtain();
       this.showGamerCurtain();
@@ -113,7 +114,6 @@ export class BattleField extends EventObservable implements IObserver{
     this.startGameBtn?.addEventListener('pointerdown', this.handleStartGame);
     this.stopGameBtn?.addEventListener('pointerdown', this.handleStopGame);
     this.enemyCells.forEach(cell => cell.addEventListener('pointerdown',this.handleEnemyField));
-    this.gamerCells.forEach(cell => cell.addEventListener('pointerdown',this.handleGamerField));
   }
 
   private handleEnemyField = (e:Event) => {
@@ -125,10 +125,6 @@ export class BattleField extends EventObservable implements IObserver{
 
   private handleStopGame = () => {
     this.notifyObservers('reset');
-  }
-
-  private handleGamerField = (e:Event) => {
-    this.notifyObservers('enemyturn');
   }
 
   private handleStartGame = () => {
