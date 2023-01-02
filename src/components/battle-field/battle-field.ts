@@ -3,6 +3,7 @@ import EventObservable, { Message } from '../../observers/EventObservable';
 import IObserver from '../../observers/IObserver';
 
 export class BattleField extends EventObservable implements IObserver{
+
   private generateBtn!: HTMLButtonElement | null;
   private startGameBtn!: HTMLButtonElement | null;
   private stopGameBtn!: HTMLButtonElement | null;
@@ -19,6 +20,7 @@ export class BattleField extends EventObservable implements IObserver{
     super();
     this.findElements();
     this.showEnemyCurtain();
+    this.showGamerCurtain();
     this.bindEvents();
   }
 
@@ -35,15 +37,28 @@ export class BattleField extends EventObservable implements IObserver{
         this.stopGameBtnShow();
         this.hideEnemyCurtain();
         this.showLabel();
-        this.attachListenersToEnemyField();
         break;
       case 'gamerturn':
-        this.drawIfHitted(message);
-        this.hideLabel();
-        this.showEnemyCurtain();
+        this.drawIfHitted(message,'gamerturn');
+        if (message && message.isWin) {
+          this.showWin(message,'gamerturn');
+          this.notifyObservers('result',message);
+        } else {
+          this.hideLabel();
+          this.showEnemyCurtain();
+          this.hideGamerCurtain();
+        }
         break;
       case 'enemyturn':
-        this.showLabel();
+        this.drawIfHitted(message,'enemyturn');
+        if (message && message.isWin) {
+          this.showWin(message,'enemyturn');
+          this.notifyObservers('result',message);
+        } else {
+          this.showLabel();
+          this.showGamerCurtain();
+          this.hideEnemyCurtain();
+        }
         break;
       case 'reset':
         this.redrawEmptyField();
@@ -57,12 +72,26 @@ export class BattleField extends EventObservable implements IObserver{
     }
   }
 
-  private detachListenersFromEnemyField = () => {
-    this.enemyCells.forEach(cell => cell.removeEventListener('pointerdown',this.handleEnemyField));
+  private showGamerCurtain() {
+    this.gamerCurtain?.classList.add('battle-field__cirtain_is-visible');
   }
 
-  private attachListenersToEnemyField = () => {
-    this.enemyCells.forEach(cell => cell.addEventListener('pointerdown',this.handleEnemyField));
+  private hideGamerCurtain() {
+    this.gamerCurtain?.classList.remove('battle-field__cirtain_is-visible');
+  }
+
+  showWin(message: Message | undefined, field: 'gamerturn' | 'enemyturn') {
+    if (this.label && message?.isWin) {
+      this.showEnemyCurtain();
+      this.showGamerCurtain();
+      if (field === 'gamerturn') {
+        this.label.innerText = 'Вы выиграли';
+      } else this.label.innerText = 'Вы проиграли';
+    }
+  }
+
+  private detachListenersFromEnemyField = () => {
+    this.enemyCells.forEach(cell => cell.removeEventListener('pointerdown',this.handleEnemyField));
   }
 
   private findElements() {
@@ -83,6 +112,8 @@ export class BattleField extends EventObservable implements IObserver{
     this.generateBtn?.addEventListener('pointerdown', this.handleGenerate);
     this.startGameBtn?.addEventListener('pointerdown', this.handleStartGame);
     this.stopGameBtn?.addEventListener('pointerdown', this.handleStopGame);
+    this.enemyCells.forEach(cell => cell.addEventListener('pointerdown',this.handleEnemyField));
+    this.gamerCells.forEach(cell => cell.addEventListener('pointerdown',this.handleGamerField));
   }
 
   private handleEnemyField = (e:Event) => {
@@ -94,6 +125,10 @@ export class BattleField extends EventObservable implements IObserver{
 
   private handleStopGame = () => {
     this.notifyObservers('reset');
+  }
+
+  private handleGamerField = (e:Event) => {
+    this.notifyObservers('enemyturn');
   }
 
   private handleStartGame = () => {
@@ -180,11 +215,12 @@ export class BattleField extends EventObservable implements IObserver{
     this.enemyCurtain?.classList.remove('battle-field__cirtain_is-visible');
   }
 
-  private drawIfHitted(message:Message|undefined) {
+  private drawIfHitted(message:Message|undefined, field: 'gamerturn' | 'enemyturn') {
     if (message) {
+      const battleField = field === 'gamerturn' ? this.enemyCells : this.gamerCells;
       const {row,column, isHitted} = message;
       if (row!==undefined && column!==undefined ) {
-        this.enemyCells.forEach(cell =>{
+        battleField.forEach(cell => {
           if(cell.getAttribute(`data-id`)===`${(row*10)+column}`) {
             if (isHitted) {
               cell.classList.add('battle-field_hitted');

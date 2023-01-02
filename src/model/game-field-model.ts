@@ -8,6 +8,9 @@ export class GameField extends EventObservable implements IObserver{
   private DOUBLE_DECK: number;
   private TRIPLE_DECK: number;
   private QUAD_DECK: number;
+  private IS_HEATED: number;
+  private enemyNumberOfQuantity = 4 + 3*2 + 2*3 + 4*1;
+  private gamerNumberOfQuantity = 4 + 3*2 + 2*3 + 4*1;
   private FIELD_SIZE = 10;
   private gamerLayout: Array<Array<number>> = [];
   private enemyLayout: Array<Array<number>> = [];
@@ -19,6 +22,7 @@ export class GameField extends EventObservable implements IObserver{
     this.DOUBLE_DECK = 2;
     this.TRIPLE_DECK = 3;
     this.QUAD_DECK = 4;
+    this.IS_HEATED = 5;
   }
 
   handleEvent(eventType: MessagesType, message?: Message): void {
@@ -26,7 +30,6 @@ export class GameField extends EventObservable implements IObserver{
       case 'start':
         this.gamerLayout = this.generateLayout();
         this.enemyLayout = this.generateLayout();
-        console.log(this.enemyLayout);
         this.notifyObservers('start', {
           layout: this.gamerLayout 
         });
@@ -37,11 +40,20 @@ export class GameField extends EventObservable implements IObserver{
       case 'gamerturn':
         if (message) {
           const { row, column } = message;
-          if (row!==undefined && column!==undefined) {
+          if (row !== undefined && column !== undefined) {
             const isHitted = this.enemyLayout[row][column] !== this.EMPTY;
-            this.notifyObservers('gamerturn', {
-              isHitted,row,column 
-            });
+            if (isHitted && this.enemyLayout[row][column] !== this.IS_HEATED) {
+              this.enemyLayout[row][column] = this.IS_HEATED;
+              this.enemyNumberOfQuantity--;
+              const isWin = this.enemyNumberOfQuantity === 0;
+              this.notifyObservers('gamerturn', {
+                isHitted,row,column,isWin
+              });
+            } else {
+              this.notifyObservers('gamerturn', {
+                isHitted,row,column
+              });
+            };
           }
         }
         break;
@@ -51,7 +63,19 @@ export class GameField extends EventObservable implements IObserver{
         this.notifyObservers('reset');
         break;
       case 'enemyturn':
-        this.notifyObservers('enemyturn');
+        let row,column;
+        while(true){
+          row = Math.floor(Math.random() * this.FIELD_SIZE);
+          column = Math.floor(Math.random() * this.FIELD_SIZE);
+          if (this.gamerLayout[row][column] !== this.IS_HEATED) break;
+        }
+        const isHitted = this.gamerLayout[row][column] !== this.EMPTY;
+        this.gamerLayout[row][column] = this.IS_HEATED;
+        if (isHitted) this.gamerNumberOfQuantity--;
+        const isWin = this.gamerNumberOfQuantity === 0;
+        this.notifyObservers('enemyturn', {
+          isHitted,row,column,isWin
+        });
         break;
     }
   }

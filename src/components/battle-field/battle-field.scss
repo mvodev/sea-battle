@@ -50,6 +50,7 @@
     height: $ship-size;
     border: 1px solid $battle-field-border-color;
     flex: 1 0 $ship-size;
+    cursor: pointer;
   }
 
   &__cell.active {
@@ -60,15 +61,15 @@
     background-color: $battle-field-enemy-color-hover;
   }
 
-  &__cell.battle-field_enemy {
-    cursor: pointer;
+  &__cell:hover {
+    background-color: $battle-field-border-color-hover;
   }
 
-  &__cell.battle-field_enemy.battle-field_hitted {
+  &__cell.battle-field_hitted {
     background-color: $battle-field-enemy-hitted;
   }
 
-  &__cell.battle-field_enemy.battle-field_failed {
+  &__cell.battle-field_failed {
     background-color: $battle-field-enemy-failed;
   }
 
@@ -150,7 +151,7 @@
     opacity: 0.5;
     position: absolute;
     width: 100%;
-    height: 100%;
+    height: 320px;
     background-color: lightgrey;
   }
 }

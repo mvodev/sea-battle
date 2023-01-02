@@ -7,6 +7,7 @@ export type Message = {
   column?:number;
   layout?:number[][];
   isHitted?: boolean;
+  isWin?: boolean;
 }
 
 class EventObservable implements IObservable {

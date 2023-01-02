@@ -6,6 +6,13 @@ import IObserver from "../observers/IObserver";
 import EventObservable, { Message } from '../observers/EventObservable';
 
 export type MessagesType = 'gamerturn' | 'enemyturn' | 'result' | 'reset' | 'start' | 'start game';
+export type FsmType = {
+  transition: string; 
+  from: string;
+  to: string;
+  fsm: Record<string,string>, 
+  event: string 
+}
 
 class Controller extends EventObservable implements IObserver{
   private model: GameField;
@@ -31,8 +38,8 @@ class Controller extends EventObservable implements IObserver{
         onGenerating: this.onStarting,
         onGame: this.onGame,
         onResult: () => console.log('on result'),
-        onGamer: function() { console.log('I gamer') },
-        onEnemy: this.onEnemy,
+        onGamer: this.onGamerTurn,
+        onEnemy: this.onEnemyTurn,
         onReseting: this.onReset,
       }
     });
@@ -43,7 +50,6 @@ class Controller extends EventObservable implements IObserver{
   }
 
   handleEvent(eventType: MessagesType, message?: any): void {
-    console.log(message);
     if (eventType === 'start' && this.fsm.state !== 'generate') {
       this.fsm.starting();
     } else if (eventType === 'start') {
@@ -71,8 +77,11 @@ class Controller extends EventObservable implements IObserver{
     this.notifyObservers('reset');
   }
 
-  private onEnemy = (transtition: any, message:Message) => {
+  private onEnemyTurn = (transtition: FsmType, message: Message) => {
     this.notifyObservers('gamerturn', message);
+  }
+  private onGamerTurn = (transtition: FsmType, message: Message) => {
+    this.notifyObservers('enemyturn', message);
   }
 }
 
