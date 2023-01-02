@@ -50,19 +50,18 @@
     height: $ship-size;
     border: 1px solid $battle-field-border-color;
     flex: 1 0 $ship-size;
-    cursor: pointer;
   }
 
   &__cell.active {
     background-color: yellow;
   }
 
-  &__cell.battle-field_enemy:hover {
-    background-color: $battle-field-enemy-color-hover;
+  &__cell.battle-field_enemy {
+    cursor: pointer;
   }
 
-  &__cell:hover {
-    background-color: $battle-field-border-color-hover;
+  &__cell.battle-field_enemy:hover {
+    background-color: $battle-field-enemy-color-hover;
   }
 
   &__cell.battle-field_hitted {
@@ -91,25 +90,28 @@
     background-color: green;
     top: 25%;
   }
-  &__start-game.battle-field_game-is-active {
+
+  &__start-game.battle-field_game-is-active,
+  &__generate-btn.battle-field_game-is-active,
+  &__generate-own.battle-field_game-is-active {
     display: none;
   }
 
-  &__start-game.battle-field_game-is-active{
-    display: none;
+
+  &__generate-btn.battle-field_layout-is-active,
+  &__generate-own.battle-field_layout-is-active {
+    position: relative;
   }
 
   &__generate-own {
     top: 35%;
   }
 
-  &__generate-own.battle-field_game-is-active {
-    position: relative;
+  &__generate-own.battle-field_layout-is-active {
     top: 20px;
   }
 
-  &__generate-btn.battle-field_game-is-active {
-    position: relative;
+  &__generate-btn.battle-field_layout-is-active {
     top: 5px;
   }
 

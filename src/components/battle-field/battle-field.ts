@@ -34,9 +34,12 @@ export class BattleField extends EventObservable implements IObserver{
         break;
       case 'start game':
         this.startGameBtnRemove();
+        this.generateBtnNotShow();
+        this.generateBtnOwnNotShow();
         this.stopGameBtnShow();
         this.hideEnemyCurtain();
         this.showLabel();
+        this.attachListeners();
         break;
       case 'gamerturn':
         this.drawIfHitted(message,'gamerturn');
@@ -69,6 +72,7 @@ export class BattleField extends EventObservable implements IObserver{
         this.stopGameBtnRemove();
         this.showEnemyCurtain();
         this.detachListenersFromEnemyField();
+        this.hideLabel();
         break;
     }
   }
@@ -113,6 +117,9 @@ export class BattleField extends EventObservable implements IObserver{
     this.generateBtn?.addEventListener('pointerdown', this.handleGenerate);
     this.startGameBtn?.addEventListener('pointerdown', this.handleStartGame);
     this.stopGameBtn?.addEventListener('pointerdown', this.handleStopGame);
+  }
+
+  private attachListeners() {
     this.enemyCells.forEach(cell => cell.addEventListener('pointerdown',this.handleEnemyField));
   }
 
@@ -165,17 +172,30 @@ export class BattleField extends EventObservable implements IObserver{
   }
 
   private generateBtnRemove() {
-    this.generateBtn?.classList.add('battle-field_game-is-active');
+    this.generateBtn?.classList.add('battle-field_layout-is-active');
   }
+
+
   private generateBtnShow() {
+    this.generateBtn?.classList.remove('battle-field_layout-is-active');
     this.generateBtn?.classList.remove('battle-field_game-is-active');
   }
 
-  private generateBtnOwnRemove() {
-    this.generateBtnOwn?.classList.add('battle-field_game-is-active');
+  private generateBtnNotShow() {
+    this.generateBtn?.classList.add('battle-field_game-is-active');
   }
+
+  private generateBtnOwnRemove() {
+    this.generateBtnOwn?.classList.add('battle-field_layout-is-active');
+  }
+
   private generateBtnOwnShow() {
+    this.generateBtnOwn?.classList.remove('battle-field_layout-is-active');
     this.generateBtnOwn?.classList.remove('battle-field_game-is-active');
+  }
+
+    private generateBtnOwnNotShow() {
+    this.generateBtnOwn?.classList.add('battle-field_game-is-active');
   }
 
   private startGameButtonShow() {
