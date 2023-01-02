@@ -120,15 +120,15 @@ export class GameField extends EventObservable implements IObserver{
   }
 
   initializeLayout() {
-    const field10x10: Array<Array<number>> = [];
+    const field: number[][] = [];
     for (let i = 0; i < this.FIELD_SIZE; i++) {
-      const row:Array<number> = [];
+      const row: number[] = [];
       for (let j = 0; j < this.FIELD_SIZE; j++) {
         row.push(this.EMPTY);
       }
-      field10x10.push(row);
+      field.push(row);
     }
-    return field10x10;
+    return field;
   }
 
   positionIsAvailable(
