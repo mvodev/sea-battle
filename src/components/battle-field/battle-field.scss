@@ -66,6 +66,26 @@
 
   &__cell.battle-field_hitted {
     background-color: $battle-field-enemy-hitted;
+    position: relative;
+  }
+
+  &__cell.battle-field_hitted::before, 
+  &__cell.battle-field_hitted::after {
+    content: "";
+    position: absolute;
+    width: 24px;
+    height: 4px;
+    background: gray;
+    top: 12px;
+    left: 2px;
+  }
+
+  &__cell.battle-field_hitted::before {
+    transform: rotate(45deg);
+  }
+
+  &__cell.battle-field_hitted::after {
+    transform: rotate(-45deg);
   }
 
   &__cell.battle-field_failed {
