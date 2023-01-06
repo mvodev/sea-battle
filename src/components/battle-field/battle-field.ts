@@ -170,11 +170,11 @@ export class BattleField extends EventObservable implements IObserver{
 
   private generateBtnShow() {
     this.generateBtn?.classList.remove('battle-field_layout-is-active');
-    this.generateBtn?.classList.remove('battle-field_game-is-active');
+    this.generateBtn?.classList.remove('battle-field_game_on');
   }
 
   private generateBtnDisappear() {
-    this.generateBtn?.classList.add('battle-field_game-is-active');
+    this.generateBtn?.classList.add('battle-field_game_on');
   }
 
   private generateBtnByYourselfRemove() {
@@ -183,30 +183,30 @@ export class BattleField extends EventObservable implements IObserver{
 
   private generateBtnOwnShow() {
     this.generateBtnOwn?.classList.remove('battle-field_layout-is-active');
-    this.generateBtnOwn?.classList.remove('battle-field_game-is-active');
+    this.generateBtnOwn?.classList.remove('battle-field_game_on');
   }
 
     private generateBtnByYourselfDisappear() {
-    this.generateBtnOwn?.classList.add('battle-field_game-is-active');
+    this.generateBtnOwn?.classList.add('battle-field_game_on');
   }
 
   private startGameButtonAppear() {
-    this.startGameBtn?.classList.remove('battle-field_game-is-active');
+    this.startGameBtn?.classList.remove('battle-field_game_on');
   }
   private startGameButtonRemove() {
-    this.startGameBtn?.classList.add('battle-field_game-is-active');
+    this.startGameBtn?.classList.add('battle-field_game_on');
   }
 
   private startGameBtnRemove() {
-    this.startGameBtn?.classList.add('battle-field_game-is-active');
+    this.startGameBtn?.classList.add('battle-field_game_on');
   }
 
   private stopGameBtnAppear() {
-    this.stopGameBtn?.classList.remove('battle-field_game-is-active');
+    this.stopGameBtn?.classList.remove('battle-field_game_on');
   }
 
   private stopGameBtnRemove() {
-    this.stopGameBtn?.classList.add('battle-field_game-is-active');
+    this.stopGameBtn?.classList.add('battle-field_game_on');
   }
 
   private showLabel() {

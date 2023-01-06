@@ -115,9 +115,9 @@
     top: 25%;
   }
 
-  &__start-game.battle-field_game-is-active,
-  &__generate-btn.battle-field_game-is-active,
-  &__generate-own.battle-field_game-is-active {
+  &__start-game.battle-field_game_on,
+  &__generate-btn.battle-field_game_on,
+  &__generate-own.battle-field_game_on {
     display: none;
   }
 
@@ -152,7 +152,7 @@
     border-radius: 4px;
   }
 
-  &__stop-btn.battle-field_game-is-active {
+  &__stop-btn.battle-field_game_on {
     display: none;
   }
 
