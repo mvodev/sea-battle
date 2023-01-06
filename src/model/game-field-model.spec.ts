@@ -1,6 +1,6 @@
 import { gameField } from '../model/game-field-model';
 
-describe('GameField class test', () => {
+describe('GameField class positionIsAvailable method test ', () => {
 
   const layout = gameField.initializeLayout();
 
@@ -132,6 +132,14 @@ describe('GameField class test', () => {
     layout[2][4] = 0;
     const positionIsAvailable = gameField.positionIsAvailable(layout,4,0,8,false);
     expect(positionIsAvailable).toEqual(false);
+  });
+
+});
+
+describe('GameField class test returnPriorityGoalResults', () => {
+
+  it('check true equal true', async () => {
+    expect(true).toEqual(false);
   });
 
 });

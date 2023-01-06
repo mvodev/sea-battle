@@ -9,15 +9,19 @@ export class GameField extends EventObservable implements IObserver{
   private TRIPLE_DECK: number;
   private QUAD_DECK: number;
   private IS_HEATED: number;
-  private enemyNumberOfQuantity = 4 + 3*2 + 2*3 + 4*1;
-  private gamerNumberOfQuantity = 4 + 3*2 + 2*3 + 4*1;
+  private enemyNumberOfShipsQuantity = 4 + 3*2 + 2*3 + 4*1;
+  private gamerNumberOfShipsQuantity = 4 + 3*2 + 2*3 + 4*1;
   private FIELD_SIZE = 10;
   private gamerLayout: number[][] = [];
   private enemyLayout: number[][] = [];
-  private priorityGoals: Array<{
-    row: number;
+  private alreadyHittedCell:{
+    row:number;
     column: number;
-  }> = [];
+  } | null = null;
+  private priorityGoals: Array<{
+      row: number;
+      column: number;
+    }> = [];
 
   constructor() {
     super();
@@ -43,18 +47,10 @@ export class GameField extends EventObservable implements IObserver{
         break;
       case 'gamerturn':
         if (message) {
-          const { row, column } = message;
-          if (row !== undefined && column !== undefined) {
-            const isHitted = this.enemyLayout[row][column] !== this.EMPTY;
-            if (isHitted && this.enemyLayout[row][column] !== this.IS_HEATED) {
-              this.enemyLayout[row][column] = this.IS_HEATED;
-              this.enemyNumberOfQuantity--;
-            } 
-            const isWin = this.enemyNumberOfQuantity === 0;
-            this.notifyObservers('gamerturn', {
-              isHitted,row,column,isWin
-            });
-          }
+          const item = this.getGamerResults(message)!;
+          const {row,column,isHitted,isWin} = item;
+          this.enemyLayout[row][column] = this.IS_HEATED;
+          this.notifyObservers('gamerturn', { isHitted, row, column, isWin }); 
         }
         break;
       case 'reset':
@@ -63,55 +59,129 @@ export class GameField extends EventObservable implements IObserver{
         this.notifyObservers('reset');
         break;
       case 'enemyturn':
-        let row = 0;
-        let column = 0;
-        if (this.priorityGoals.length >0) {
-          const item = this.priorityGoals.pop();
-          if (item !== undefined) {
-            row = item.row;
-            column = item.column;
-          }
-        } else {
-          while(true) {
-            row = Math.floor(Math.random() * this.FIELD_SIZE);
-            column = Math.floor(Math.random() * this.FIELD_SIZE);
-            if (this.gamerLayout[row][column] !== this.IS_HEATED) break;
-          }
-        }
-        const isHitted = this.gamerLayout[row][column] !== this.EMPTY;
+        const { row, column , isHitted, isWin} = this.getAIResults()!;
         this.gamerLayout[row][column] = this.IS_HEATED;
-        if (isHitted) {
-          this.gamerNumberOfQuantity--;
-          this.addPriorityGoals(row,column);
-        }
-        const isWin = this.gamerNumberOfQuantity === 0;
-        this.notifyObservers('enemyturn', {
-          isHitted,row,column,isWin
-        });
+        this.notifyObservers('enemyturn', { isHitted, row, column, isWin });
         break;
     }
   }
 
-  addPriorityGoals(row: number, column: number) {
-    if (row - 1 >=0 && this.gamerLayout[row-1][column]!== this.IS_HEATED) {
-      this.priorityGoals.push({
-        row:row-1,column
-      });
+  private getAIResults = () => {
+    let row = 0;
+    let column = 0;
+    console.log(this.priorityGoals);
+    console.log(this.alreadyHittedCell);
+    if (this.priorityGoals.length > 0 || this.alreadyHittedCell)  {
+      console.log('inside this.priorityGoals.length > 0 || this.alreadyHittedCell');
+      if (this.priorityGoals.length === 0) {
+        console.log('inside this.priorityGoals.length === 0');
+        const rowHitted = this.alreadyHittedCell?.row!;
+        const columnHitted = this.alreadyHittedCell?.column!;
+        if (rowHitted - 1 >=0 && this.gamerLayout[rowHitted-1][columnHitted]!== this.IS_HEATED) {
+          this.priorityGoals.push({
+            row: rowHitted - 1,column:columnHitted
+          });
+        }
+        if (rowHitted + 1 < this.FIELD_SIZE && this.gamerLayout[rowHitted + 1][columnHitted]!== this.IS_HEATED) {
+          this.priorityGoals.push({
+            row:rowHitted + 1,column:columnHitted
+          });
+        }
+        if (columnHitted -1 >=0 && this.gamerLayout[rowHitted][columnHitted - 1] !== this.IS_HEATED) {
+          this.priorityGoals.push({
+            row:rowHitted, column: columnHitted - 1
+          })
+        }
+        if (columnHitted + 1 < this.FIELD_SIZE && this.gamerLayout[rowHitted][columnHitted + 1] !== this.IS_HEATED) {
+          this.priorityGoals.push({
+            row:rowHitted, column: columnHitted + 1
+          })
+        };
+        const item = this.priorityGoals.pop();
+        if (item) {
+          row = item.row;
+          column = item.column;
+          if (this.gamerLayout[row][column] !== this.EMPTY) {
+            if (this.alreadyHittedCell?.row === row) {
+              this.priorityGoals = this.priorityGoals.filter( goal => goal.row === this.alreadyHittedCell?.row);
+            } else {
+              this.priorityGoals = this.priorityGoals.filter( goal => goal.column === this.alreadyHittedCell?.column)
+            }
+          }
+          if (this.priorityGoals.length === 0) this.alreadyHittedCell = null;
+        }
+      } else {
+        console.log('inside ELSE this.priorityGoals.length !== 0');
+        const item = this.priorityGoals.pop();
+        if (item) {
+          row = item.row;
+          column = item.column;
+          console.log('item');
+          console.log(item);
+          if (this.gamerLayout[row][column] !== this.EMPTY && this.gamerLayout[row][column] !== this.IS_HEATED) {
+            console.log('this.gamerLayout[row][column] !== this.EMPTY && this.gamerLayout[row][column] !== this.IS_HEATED');
+            if (this.alreadyHittedCell?.row === row) {
+              console.log('this.alreadyHittedCell?.row === row');
+              this.priorityGoals = this.priorityGoals.filter( goal => goal.row === this.alreadyHittedCell?.row);
+              if (column  - this.alreadyHittedCell.column > 0 && column + 1 < this.FIELD_SIZE) {
+                console.log('this.priorityGoals.push({ row, column: column + 1})');
+                this.priorityGoals.push({ row, column: column + 1});
+              }
+              if (column -1 >=0 ) {
+                console.log('this.priorityGoals.push({ row, column: column - 1})');
+                this.priorityGoals.push({ row, column: column - 1});
+              }
+            } else if (this.alreadyHittedCell?.column === column) {
+              console.log('this.alreadyHittedCell?.column === column');
+              this.priorityGoals = this.priorityGoals.filter( goal => goal.column === this.alreadyHittedCell?.column);
+              if (this.alreadyHittedCell && row  - this.alreadyHittedCell.row > 0 && row + 1 < this.FIELD_SIZE) {
+                this.priorityGoals.push({ row: row+1, column});
+                console.log('this.priorityGoals.push({ row: row+1, column})');
+              }
+              if (row -1 >=0) {
+                console.log('this.priorityGoals.push({ row: row-1, column})');
+                this.priorityGoals.push({ row: row-1, column});
+              }
+            }
+          }
+          if (this.priorityGoals.length === 0) this.alreadyHittedCell = null;
+        }
+      }
+    } else {
+      while(true) {
+        row = Math.floor(Math.random() * this.FIELD_SIZE);
+        column = Math.floor(Math.random() * this.FIELD_SIZE);
+        if (this.gamerLayout[row][column] !== this.IS_HEATED) break;
+      }
     }
-    if (row + 1 < this.FIELD_SIZE && this.gamerLayout[row + 1][column]!== this.IS_HEATED) {
-      this.priorityGoals.push({
-        row:row + 1,column
-      });
+    const isHitted = this.gamerLayout[row][column] !== this.EMPTY && this.gamerLayout[row][column] !== this.IS_HEATED;
+    if (isHitted) {
+      this.gamerNumberOfShipsQuantity--;
+      if (!this.alreadyHittedCell) {
+        this.alreadyHittedCell = { row,column };
+      }
     }
-    if (column -1 >=0 && this.gamerLayout[row][column - 1] !== this.IS_HEATED) {
-      this.priorityGoals.push({
-        row, column: column - 1
-      })
+    const isWin = this.gamerNumberOfShipsQuantity === 0;
+    console.log(this.priorityGoals);
+    console.log(this.alreadyHittedCell);
+    return {
+      row,
+      column,
+      isHitted,
+      isWin
     }
-    if (column + 1 < this.FIELD_SIZE && this.gamerLayout[row][column + 1] !== this.IS_HEATED) {
-      this.priorityGoals.push({
-        row, column: column + 1
-      })
+  }
+
+  private getGamerResults = (message:Message) => {
+    const { row, column } = message;
+    if (row !== undefined && column !== undefined) {
+      const isHitted = this.enemyLayout[row][column] !== this.EMPTY && this.enemyLayout[row][column] !== this.IS_HEATED;
+      if (isHitted) {
+        this.enemyLayout[row][column] = this.IS_HEATED;
+        this.enemyNumberOfShipsQuantity--;
+      } 
+      const isWin = this.enemyNumberOfShipsQuantity === 0;
+      return {row,column,isHitted,isWin}
     }
   }
 
