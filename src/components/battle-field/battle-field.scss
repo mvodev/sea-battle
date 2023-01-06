@@ -69,6 +69,10 @@
     position: relative;
   }
 
+  &__cell.battle-field_hitted:hover {
+    background-color: $battle-field-enemy-hitted;
+  }
+
   &__cell.battle-field_hitted::before, 
   &__cell.battle-field_hitted::after {
     content: "";
