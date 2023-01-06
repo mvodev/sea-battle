@@ -81,12 +81,12 @@ export class GameField extends EventObservable implements IObserver{
         console.log('priority goals created');
         this.priorityGoals.forEach(p=>console.log(p));
         console.log('==========priority goals==================');
-        const item = this.priorityGoals.pop();
-        console.log('извлекли item');
-        console.log(item);
-        if (item) {
-          row = item.row;
-          column = item.column;
+        const cell = this.priorityGoals.pop();
+        console.log('извлекли cell');
+        console.log(cell);
+        if (cell) {
+          row = cell.row;
+          column = cell.column;
           if (this.gamerLayout[row][column] !== this.EMPTY && this.gamerLayout[row][column] !== this.IS_HEATED) {
             if (this.alreadyHittedCell?.row === row) {
               this.priorityGoals = this.priorityGoals.filter( goal => goal.row === this.alreadyHittedCell?.row);
@@ -115,12 +115,12 @@ export class GameField extends EventObservable implements IObserver{
         }
       } else {
         console.log('inside ELSE this.priorityGoals.length !== 0');
-        const item = this.priorityGoals.pop();
-        if (item) {
-          row = item.row;
-          column = item.column;
+        const cell = this.priorityGoals.pop();
+        if (cell) {
+          row = cell.row;
+          column = cell.column;
           console.log('item');
-          console.log(item);
+          console.log(cell);
           if (this.gamerLayout[row][column] !== this.EMPTY && this.gamerLayout[row][column] !== this.IS_HEATED) {
             console.log('this.gamerLayout[row][column] !== this.EMPTY && this.gamerLayout[row][column] !== this.IS_HEATED');
             if (this.alreadyHittedCell?.row === row) {
