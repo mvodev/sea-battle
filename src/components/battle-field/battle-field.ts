@@ -90,6 +90,7 @@ export class BattleField extends EventObservable implements IObserver{
       if (field === 'gamerturn') {
         this.label.innerText = 'Вы выиграли';
       } else this.label.innerText = 'Вы проиграли';
+      this.showLabel();
     }
   }
 
