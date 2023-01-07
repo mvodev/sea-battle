@@ -56,25 +56,25 @@
     background-color: yellow;
   }
 
-  &__cell.battle-field_enemy {
+  &__cell.battle-field_enemy_field {
     cursor: pointer;
   }
 
-  &__cell.battle-field_enemy:hover {
+  &__cell.battle-field_enemy_field:hover {
     background-color: $battle-field-enemy-color-hover;
   }
 
-  &__cell.battle-field_hitted {
+  &__cell.battle-field_hitted_cell {
     background-color: $battle-field-enemy-hitted;
     position: relative;
   }
 
-  &__cell.battle-field_hitted:hover {
+  &__cell.battle-field_hitted_cell:hover {
     background-color: $battle-field-enemy-hitted;
   }
 
-  &__cell.battle-field_hitted::before, 
-  &__cell.battle-field_hitted::after {
+  &__cell.battle-field_hitted_cell::before, 
+  &__cell.battle-field_hitted_cell::after {
     content: "";
     position: absolute;
     width: 24px;
@@ -84,15 +84,15 @@
     left: 2px;
   }
 
-  &__cell.battle-field_hitted::before {
+  &__cell.battle-field_hitted_cell::before {
     transform: rotate(45deg);
   }
 
-  &__cell.battle-field_hitted::after {
+  &__cell.battle-field_hitted_cell::after {
     transform: rotate(-45deg);
   }
 
-  &__cell.battle-field_failed {
+  &__cell.battle-field_failed_cell {
     background-color: $battle-field-enemy-failed;
   }
 
@@ -115,10 +115,14 @@
     top: 25%;
   }
 
-  &__start-game.battle-field_game_on,
+  &__start-game,
   &__generate-btn.battle-field_game_on,
   &__generate-own.battle-field_game_on {
     display: none;
+  }
+
+  &__start-game.battle-field_game_on{
+    display: block;
   }
 
 

@@ -1,5 +1,5 @@
 mixin battle-field({ isEnemy,columns } = {})
-  - const enemyClassName = isEnemy ? 'battle-field_enemy js-battle-field_enemy' : 'js-droppable'
+  - const enemyClassName = isEnemy ? 'battle-field_enemy_field js-battle-field_enemy_field' : 'js-droppable'
   - let counter = 0
   .battle-field.js-battle-field(class=enemyClassName)
     .battle-field__curtain.js-battle-field__curtain 
@@ -20,5 +20,5 @@ mixin battle-field({ isEnemy,columns } = {})
       button.battle-field__generate-own.js-battle-field__generate-own Расставить самостоятельно
       button.battle-field__stop-btn.battle-field_game_on.js-battle-field__stop-btn Стоп игра
     else 
-      button.battle-field__start-game.js-battle-field__start-game.battle-field_game-is-active Играть
+      button.battle-field__start-game.js-battle-field__start-game Играть
       span.battle-field__hit.js-battle-field__hit Стреляй!

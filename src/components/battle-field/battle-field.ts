@@ -33,9 +33,9 @@ export class BattleField extends EventObservable implements IObserver{
         this.startGameButtonAppear();
         break;
       case 'start game':
-        this.startGameBtnRemove();
         this.generateBtnDisappear();
         this.generateBtnByYourselfDisappear();
+        this.startGameBtnRemove();
         this.stopGameBtnAppear();
         this.hideEnemyCurtain();
         this.showLabel();
@@ -67,7 +67,7 @@ export class BattleField extends EventObservable implements IObserver{
         this.redrawEmptyField();
         this.generateBtnShow();
         this.generateBtnOwnShow();
-        this.startGameButtonRemove();
+        this.startGameBtnRemove();
         this.stopGameBtnRemove();
         this.showEnemyCurtain();
         this.hideLabel();
@@ -99,11 +99,11 @@ export class BattleField extends EventObservable implements IObserver{
     this.generateBtnOwn = document.querySelector('.js-battle-field__generate-own');
     this.stopGameBtn = document.querySelector('.js-battle-field__stop-btn');
     this.startGameBtn = document.querySelector('.js-battle-field__start-game');
-    this.gamerBattleField  = document.querySelectorAll('.js-battle-field:not(.js-battle-field_enemy)')[0];
-    this.enemyBattleField = document.querySelector('.js-battle-field.battle-field_enemy')
+    this.gamerBattleField  = document.querySelectorAll('.js-battle-field:not(.js-battle-field_enemy_field)')[0];
+    this.enemyBattleField = document.querySelector('.js-battle-field.battle-field_enemy_field')
     this.gamerCurtain = this.gamerBattleField.querySelector('.js-battle-field__curtain');
     this.enemyCurtain = this.enemyBattleField?.querySelector('.js-battle-field__curtain');
-    this.enemyCells  = document.querySelectorAll('.js-battle-field__cell.js-battle-field_enemy');
+    this.enemyCells  = document.querySelectorAll('.js-battle-field__cell.js-battle-field_enemy_field');
     this.gamerCells = this.gamerBattleField.querySelectorAll('.js-battle-field__cell');
     this.label = document.querySelector('.js-battle-field__hit');
   }
@@ -134,12 +134,12 @@ export class BattleField extends EventObservable implements IObserver{
     this.gamerCells.forEach(cell => {
       cell.classList.remove('js-battle-field__ship');
       cell.classList.remove('battle-field__ship');
-      cell.classList.remove('battle-field_hitted');
-      cell.classList.remove('battle-field_failed');
+      cell.classList.remove('battle-field_hitted_cell');
+      cell.classList.remove('battle-field_failed_cell');
     });
     this.enemyCells.forEach(cell=>{
-      cell.classList.remove('battle-field_hitted');
-      cell.classList.remove('battle-field_failed');
+      cell.classList.remove('battle-field_hitted_cell');
+      cell.classList.remove('battle-field_failed_cell');
     })
   }
 
@@ -186,23 +186,20 @@ export class BattleField extends EventObservable implements IObserver{
     this.generateBtnOwn?.classList.remove('battle-field_game_on');
   }
 
-    private generateBtnByYourselfDisappear() {
+  private generateBtnByYourselfDisappear() {
     this.generateBtnOwn?.classList.add('battle-field_game_on');
   }
 
   private startGameButtonAppear() {
-    this.startGameBtn?.classList.remove('battle-field_game_on');
-  }
-  private startGameButtonRemove() {
     this.startGameBtn?.classList.add('battle-field_game_on');
   }
 
   private startGameBtnRemove() {
-    this.startGameBtn?.classList.add('battle-field_game_on');
+    this.startGameBtn?.classList.remove('battle-field_game_on');
   }
 
   private stopGameBtnAppear() {
-    this.stopGameBtn?.classList.remove('battle-field_game_on');
+    this.stopGameBtn?.classList.add('battle-field_game_on');
   }
 
   private stopGameBtnRemove() {
@@ -233,8 +230,8 @@ export class BattleField extends EventObservable implements IObserver{
         battleField.forEach(cell => {
           if(cell.getAttribute(`data-id`)===`${(row*10)+column}`) {
             if (isHitted) {
-              cell.classList.add('battle-field_hitted');
-            } else cell.classList.add('battle-field_failed');
+              cell.classList.add('battle-field_hitted_cell');
+            } else cell.classList.add('battle-field_failed_cell');
           } 
         })
       }
