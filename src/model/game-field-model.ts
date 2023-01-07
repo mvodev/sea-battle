@@ -18,6 +18,7 @@ export class GameField extends EventObservable implements IObserver{
     row:number;
     column: number;
   } | null = null;
+  private priorityGoalsWasFilledIn = false;
   private priorityGoals: Array<{
       row: number;
       column: number;
@@ -69,21 +70,11 @@ export class GameField extends EventObservable implements IObserver{
   private getAIResults = () => {
     let row = 0;
     let column = 0;
-    console.log('----------------------------------------------');
-    console.log('this.priorityGoals.length=');
-    console.log(this.priorityGoals.length);
-    console.log(this.priorityGoals);
-    console.log(this.alreadyHittedCell);
     if (this.priorityGoals.length > 0 || this.alreadyHittedCell)  {
-      console.log('inside this.priorityGoals.length > 0 || this.alreadyHittedCell');
-      if (this.priorityGoals.length === 0) {
+      if (this.priorityGoals.length === 0 && !this.priorityGoalsWasFilledIn) {
         this.addCellsToPriorityGoals();
-        console.log('priority goals created');
-        this.priorityGoals.forEach(p=>console.log(p));
-        console.log('==========priority goals==================');
+        this.priorityGoalsWasFilledIn = true;
         const cell = this.priorityGoals.pop();
-        console.log('извлекли cell');
-        console.log(cell);
         if (cell) {
           row = cell.row;
           column = cell.column;
@@ -91,56 +82,39 @@ export class GameField extends EventObservable implements IObserver{
             if (this.alreadyHittedCell?.row === row) {
               this.priorityGoals = this.priorityGoals.filter( goal => goal.row === this.alreadyHittedCell?.row);
               if (column  - this.alreadyHittedCell.column > 0 && column + 1 < this.FIELD_SIZE) {
-                console.log('this.priorityGoals.push({ row, column: column + 1}) после извлечения ');
                 this.priorityGoals.push({ row, column: column + 1});
               }else if (column - 1 >=0 && column  - this.alreadyHittedCell.column < 0) {
-                console.log('this.priorityGoals.push({ row, column: column - 1}) после извлечения ');
                 this.priorityGoals.push({ row, column: column - 1});
               }
             } else {
               this.priorityGoals = this.priorityGoals.filter( goal => goal.column === this.alreadyHittedCell?.column);
               if (this.alreadyHittedCell && row  - this.alreadyHittedCell.row > 0 && row + 1 < this.FIELD_SIZE) {
                 this.priorityGoals.push({ row: row+1, column});
-                console.log('this.priorityGoals.push({ row: row+1, column})');
               }else if (this.alreadyHittedCell && row -1 >=0 && row  - this.alreadyHittedCell.row < 0) {
-                console.log('this.priorityGoals.push({ row: row-1, column})');
                 this.priorityGoals.push({ row: row-1, column});
               }
             }
           }
-          console.log('priority goals after filter');
-          this.priorityGoals.forEach(p=>console.log(p));
-          console.log('---------------------------------------');
           if (this.priorityGoals.length === 0) this.alreadyHittedCell = null;
         }
       } else {
-        console.log('inside ELSE this.priorityGoals.length !== 0');
         const cell = this.priorityGoals.pop();
         if (cell) {
           row = cell.row;
           column = cell.column;
-          console.log('item');
-          console.log(cell);
           if (this.gamerLayout[row][column] !== this.EMPTY && this.gamerLayout[row][column] !== this.IS_HEATED) {
-            console.log('this.gamerLayout[row][column] !== this.EMPTY && this.gamerLayout[row][column] !== this.IS_HEATED');
             if (this.alreadyHittedCell?.row === row) {
-              console.log('this.alreadyHittedCell?.row === row');
               this.priorityGoals = this.priorityGoals.filter( goal => goal.row === this.alreadyHittedCell?.row);
               if (column  - this.alreadyHittedCell.column > 0 && column + 1 < this.FIELD_SIZE) {
-                console.log('this.priorityGoals.push({ row, column: column + 1})');
                 this.priorityGoals.push({ row, column: column + 1});
               }else if (column - 1 >=0 && column  - this.alreadyHittedCell.column < 0) {
-                console.log('this.priorityGoals.push({ row, column: column - 1})');
                 this.priorityGoals.push({ row, column: column - 1});
               }
             } else if (this.alreadyHittedCell?.column === column) {
-              console.log('this.alreadyHittedCell?.column === column');
               this.priorityGoals = this.priorityGoals.filter( goal => goal.column === this.alreadyHittedCell?.column);
               if (this.alreadyHittedCell && row  - this.alreadyHittedCell.row > 0 && row + 1 < this.FIELD_SIZE) {
                 this.priorityGoals.push({ row: row+1, column});
-                console.log('this.priorityGoals.push({ row: row+1, column})');
               }else if (row -1 >=0 && row  - this.alreadyHittedCell.row < 0) {
-                console.log('this.priorityGoals.push({ row: row-1, column})');
                 this.priorityGoals.push({ row: row-1, column});
               }
             }
@@ -148,6 +122,7 @@ export class GameField extends EventObservable implements IObserver{
         }
         if (this.priorityGoals.length === 0) {
           this.alreadyHittedCell = null;
+          this.priorityGoalsWasFilledIn = false;
         };
       }
     } else {
@@ -165,8 +140,6 @@ export class GameField extends EventObservable implements IObserver{
       }
     }
     const isWin = this.gamerNumberOfShipsQuantity === 0;
-    console.log(this.priorityGoals);
-    console.log(this.alreadyHittedCell);
     return {
       row,
       column,
@@ -193,29 +166,24 @@ export class GameField extends EventObservable implements IObserver{
   }
 
   private addCellsToPriorityGoals = () => {
-    console.log('inside this.priorityGoals.length === 0');
     const rowHitted = this.alreadyHittedCell?.row!;
     const columnHitted = this.alreadyHittedCell?.column!;
     if (rowHitted - 1 >=0 && this.gamerLayout[rowHitted-1][columnHitted]!== this.IS_HEATED) {
-      console.log('rowHitted - 1 >=0 && this.gamerLayout[rowHitted-1][columnHitted]!== this.IS_HEATED');
       this.priorityGoals.push({
         row: rowHitted - 1,column:columnHitted
       });
     }
     if (rowHitted + 1 < this.FIELD_SIZE && this.gamerLayout[rowHitted + 1][columnHitted]!== this.IS_HEATED) {
-      console.log('rowHitted + 1 < this.FIELD_SIZE && this.gamerLayout[rowHitted + 1][columnHitted]!== this.IS_HEATED');
       this.priorityGoals.push({
         row:rowHitted + 1,column:columnHitted
       });
     }
     if (columnHitted -1 >=0 && this.gamerLayout[rowHitted][columnHitted - 1] !== this.IS_HEATED) {
-      console.log('columnHitted -1 >=0 && this.gamerLayout[rowHitted][columnHitted - 1] !== this.IS_HEATED')
       this.priorityGoals.push({
         row:rowHitted, column: columnHitted - 1
       })
     }
     if (columnHitted + 1 < this.FIELD_SIZE && this.gamerLayout[rowHitted][columnHitted + 1] !== this.IS_HEATED) {
-      console.log('columnHitted + 1 < this.FIELD_SIZE && this.gamerLayout[rowHitted][columnHitted + 1] !== this.IS_HEATED');
       this.priorityGoals.push({
         row:rowHitted, column: columnHitted + 1
       })
