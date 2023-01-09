@@ -5,7 +5,7 @@ import { BattleField } from '../components/battle-field/battle-field';
 import IObserver from "../observers/IObserver";
 import EventObservable, { Message } from '../observers/EventObservable';
 
-export type MessagesType = 'gamerturn' | 'enemyturn' | 'result' | 'reset' | 'start' | 'start game';
+export type MessagesType = 'gamerturn' | 'enemyturn' | 'result' | 'reset' | 'start' | 'start game' | 'create layout';
 export type FsmType = {
   transition: string; 
   from: string;
@@ -26,8 +26,9 @@ class Controller extends EventObservable implements IObserver{
     init: 'start',
       transitions: [
         { name: 'starting', from: 'start', to: 'generate' },
+        { name: 'creating', from: 'start', to: 'create' },
         { name: 'generating', from: 'generate', to: 'generate' },
-        { name: 'game', from: 'generate', to: 'gamerturn' },
+        { name: 'game', from: ['generate','create'], to: 'gamerturn' },
         { name: 'resulting',   from: ['gamerturn','enemyturn'], to: 'result' },
         { name: 'gamer', from: 'enemyturn', to: 'gamerturn'},
         { name: 'enemy', from: 'gamerturn', to: 'enemyturn'},
@@ -35,6 +36,7 @@ class Controller extends EventObservable implements IObserver{
       ],
       methods: {
         onStarting: this.onStarting,
+        onCreating: this.onCreating,
         onGenerating: this.onStarting,
         onGame: this.onGame,
         onResult: () => console.log('on result'),
@@ -75,6 +77,10 @@ class Controller extends EventObservable implements IObserver{
 
   private onReset = () => {
     this.notifyObservers('reset');
+  }
+
+  private onCreating = () => {
+    this.notifyObservers('create layout');
   }
 
   private onEnemyTurn = (transtition: FsmType, message: Message) => {
