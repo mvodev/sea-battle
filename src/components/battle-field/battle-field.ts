@@ -1,9 +1,9 @@
 import { MessagesType } from '../../controller/сontroller';
 import EventObservable, { Message } from '../../observers/EventObservable';
 import IObserver from '../../observers/IObserver';
+import Ship from '../ship/ship';
 
 export class BattleField extends EventObservable implements IObserver{
-
   private generateBtn!: HTMLButtonElement | null;
   private startGameBtn!: HTMLButtonElement | null;
   private stopGameBtn!: HTMLButtonElement | null;
@@ -39,6 +39,12 @@ export class BattleField extends EventObservable implements IObserver{
         this.stopGameBtnAppear();
         this.hideEnemyCurtain();
         this.showLabel();
+        break;
+      case 'create layout':
+        this.hideGamerCurtain();
+        this.generateBtnDisappear();
+        this.generateBtnByYourselfDisappear();
+        this.startGameButtonAppear();
         break;
       case 'gamerturn':
         this.drawIfHitted(message,'gamerturn');
@@ -112,6 +118,7 @@ export class BattleField extends EventObservable implements IObserver{
     this.generateBtn?.addEventListener('pointerdown', this.handleGenerate);
     this.startGameBtn?.addEventListener('pointerdown', this.handleStartGame);
     this.stopGameBtn?.addEventListener('pointerdown', this.handleStopGame);
+    this.generateBtnOwn?.addEventListener('pointerdown', this.handleGenerateOwn);
     this.enemyCells.forEach(cell => cell.addEventListener('pointerdown',this.handleEnemyField));
   }
 
@@ -120,6 +127,11 @@ export class BattleField extends EventObservable implements IObserver{
     const row = Number(battleField.getAttribute('data-row'));
     const column = Number(battleField.getAttribute('data-column'));
     this.notifyObservers('gamerturn', {row,column});
+  }
+
+  private handleGenerateOwn = () => {
+    this.notifyObservers('create layout');
+    document.querySelectorAll('.js-ship').forEach(elem => new Ship(elem as HTMLDivElement));
   }
 
   private handleStopGame = () => {

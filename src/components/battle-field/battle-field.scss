@@ -53,7 +53,7 @@
   }
 
   &__cell.active {
-    background-color: yellow;
+    background-color: $battle-field-border-color;
   }
 
   &__cell.battle-field_enemy_field {

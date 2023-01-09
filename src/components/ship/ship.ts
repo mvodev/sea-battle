@@ -1,7 +1,7 @@
 class Ship {
   private isVertical: boolean | undefined;
   private shipDiv: HTMLDivElement;
-  private size: number;
+  private size!: number;
   private shipSize = 30;
 
   constructor(shipDiv:HTMLDivElement) {
@@ -117,9 +117,8 @@ class Ship {
       }  
     }
   }
-
 }
+export default Ship;
 
-document.querySelectorAll('.js-ship').forEach(elem => new Ship(elem as HTMLDivElement));
 
 

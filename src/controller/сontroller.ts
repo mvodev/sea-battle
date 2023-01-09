@@ -60,6 +60,8 @@ class Controller extends EventObservable implements IObserver{
       this.fsm.game();
     } else if (eventType === 'gamerturn') {
       this.fsm.enemy(message);
+    } else if (eventType === 'create layout') {
+      this.fsm.creating();
     } else if (eventType === 'enemyturn') {
       this.fsm.gamer(message);
     } else if (eventType === 'reset') {
@@ -86,6 +88,7 @@ class Controller extends EventObservable implements IObserver{
   private onEnemyTurn = (transtition: FsmType, message: Message) => {
     this.notifyObservers('gamerturn', message);
   }
+
   private onGamerTurn = (transtition: FsmType, message: Message) => {
     this.notifyObservers('enemyturn', message);
   }
