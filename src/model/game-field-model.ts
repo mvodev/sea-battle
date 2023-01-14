@@ -11,7 +11,7 @@ export class GameField extends EventObservable implements IObserver{
   private IS_HEATED: number;
   private enemyNumberOfShipsQuantity = 4 + 3*2 + 2*3 + 4*1;
   private gamerNumberOfShipsQuantity = 4 + 3*2 + 2*3 + 4*1;
-  private FIELD_SIZE = 10;
+  private FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN = 10;
   private gamerLayout: number[][] = [];
   private enemyLayout: number[][] = [];
   private alreadyHittedCell:{
@@ -86,14 +86,14 @@ export class GameField extends EventObservable implements IObserver{
           if (this.gamerLayout[row][column] !== this.EMPTY && this.gamerLayout[row][column] !== this.IS_HEATED) {
             if (this.alreadyHittedCell?.row === row) {
               this.priorityGoals = this.priorityGoals.filter( goal => goal.row === this.alreadyHittedCell?.row);
-              if (column  - this.alreadyHittedCell.column > 0 && column + 1 < this.FIELD_SIZE) {
+              if (column  - this.alreadyHittedCell.column > 0 && column + 1 < this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN) {
                 this.priorityGoals.push({ row, column: column + 1});
               }else if (column - 1 >=0 && column  - this.alreadyHittedCell.column < 0) {
                 this.priorityGoals.push({ row, column: column - 1});
               }
             } else {
               this.priorityGoals = this.priorityGoals.filter( goal => goal.column === this.alreadyHittedCell?.column);
-              if (this.alreadyHittedCell && row  - this.alreadyHittedCell.row > 0 && row + 1 < this.FIELD_SIZE) {
+              if (this.alreadyHittedCell && row  - this.alreadyHittedCell.row > 0 && row + 1 < this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN) {
                 this.priorityGoals.push({ row: row+1, column});
               }else if (this.alreadyHittedCell && row -1 >=0 && row  - this.alreadyHittedCell.row < 0) {
                 this.priorityGoals.push({ row: row-1, column});
@@ -110,14 +110,14 @@ export class GameField extends EventObservable implements IObserver{
           if (this.gamerLayout[row][column] !== this.EMPTY && this.gamerLayout[row][column] !== this.IS_HEATED) {
             if (this.alreadyHittedCell?.row === row) {
               this.priorityGoals = this.priorityGoals.filter( goal => goal.row === this.alreadyHittedCell?.row);
-              if (column  - this.alreadyHittedCell.column > 0 && column + 1 < this.FIELD_SIZE) {
+              if (column  - this.alreadyHittedCell.column > 0 && column + 1 < this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN) {
                 this.priorityGoals.push({ row, column: column + 1});
               }else if (column - 1 >=0 && column  - this.alreadyHittedCell.column < 0) {
                 this.priorityGoals.push({ row, column: column - 1});
               }
             } else if (this.alreadyHittedCell?.column === column) {
               this.priorityGoals = this.priorityGoals.filter( goal => goal.column === this.alreadyHittedCell?.column);
-              if (this.alreadyHittedCell && row  - this.alreadyHittedCell.row > 0 && row + 1 < this.FIELD_SIZE) {
+              if (this.alreadyHittedCell && row  - this.alreadyHittedCell.row > 0 && row + 1 < this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN) {
                 this.priorityGoals.push({ row: row+1, column});
               }else if (row -1 >=0 && row  - this.alreadyHittedCell.row < 0) {
                 this.priorityGoals.push({ row: row-1, column});
@@ -132,8 +132,8 @@ export class GameField extends EventObservable implements IObserver{
       }
     } else {
       while(true) {
-        row = Math.floor(Math.random() * this.FIELD_SIZE);
-        column = Math.floor(Math.random() * this.FIELD_SIZE);
+        row = Math.floor(Math.random() * this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN);
+        column = Math.floor(Math.random() * this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN);
         if (this.gamerLayout[row][column] !== this.IS_HEATED) break;
       }
     }
@@ -167,7 +167,7 @@ export class GameField extends EventObservable implements IObserver{
   }
 
   getFieldSize() {
-    return this.FIELD_SIZE;
+    return this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN;
   }
 
   private addCellsToPriorityGoals = () => {
@@ -178,7 +178,7 @@ export class GameField extends EventObservable implements IObserver{
         row: rowHitted - 1,column:columnHitted
       });
     }
-    if (rowHitted + 1 < this.FIELD_SIZE && this.gamerLayout[rowHitted + 1][columnHitted]!== this.IS_HEATED) {
+    if (rowHitted + 1 < this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN && this.gamerLayout[rowHitted + 1][columnHitted]!== this.IS_HEATED) {
       this.priorityGoals.push({
         row:rowHitted + 1,column:columnHitted
       });
@@ -188,7 +188,7 @@ export class GameField extends EventObservable implements IObserver{
         row:rowHitted, column: columnHitted - 1
       })
     }
-    if (columnHitted + 1 < this.FIELD_SIZE && this.gamerLayout[rowHitted][columnHitted + 1] !== this.IS_HEATED) {
+    if (columnHitted + 1 < this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN && this.gamerLayout[rowHitted][columnHitted + 1] !== this.IS_HEATED) {
       this.priorityGoals.push({
         row:rowHitted, column: columnHitted + 1
       })
@@ -197,9 +197,9 @@ export class GameField extends EventObservable implements IObserver{
 
   initializeLayout() {
     const field: number[][] = [];
-    for (let i = 0; i < this.FIELD_SIZE; i++) {
+    for (let i = 0; i < this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN; i++) {
       const row: number[] = [];
-      for (let j = 0; j < this.FIELD_SIZE; j++) {
+      for (let j = 0; j < this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN; j++) {
         row.push(this.EMPTY);
       }
       field.push(row);
@@ -213,11 +213,11 @@ export class GameField extends EventObservable implements IObserver{
     row: number,
     column: number,
     isVertical = true) {
-    if (isVertical && (row + shipSize -1) >= this.FIELD_SIZE ) {
+    if (isVertical && (row + shipSize -1) >= this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN ) {
       return false;
     }
 
-    if (!isVertical && (column + shipSize -1) >= this.FIELD_SIZE) {
+    if (!isVertical && (column + shipSize -1) >= this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN) {
       return false;
     }
 
@@ -225,18 +225,18 @@ export class GameField extends EventObservable implements IObserver{
     let downRowToCheck;
 
     if (isVertical) {
-      downRowToCheck = row + shipSize +1 >= this.FIELD_SIZE ? this.FIELD_SIZE -1 : row + shipSize +1; 
+      downRowToCheck = row + shipSize +1 >= this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN ? this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN -1 : row + shipSize +1; 
     } else {
-      downRowToCheck = row +1 >= this.FIELD_SIZE ? this.FIELD_SIZE -1 : row +1;
+      downRowToCheck = row +1 >= this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN ? this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN -1 : row +1;
     }
 
     let leftColumnToCheck = column -1 < 0 ? 0 : column - 1;
     let rightColumnToCheck:number;
 
     if (isVertical) {
-      rightColumnToCheck = column + 1 >= this.FIELD_SIZE ? this.FIELD_SIZE -1 : column + 1;
+      rightColumnToCheck = column + 1 >= this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN ? this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN -1 : column + 1;
     } else {
-      rightColumnToCheck = column + shipSize +1 >= this.FIELD_SIZE ? this.FIELD_SIZE -1 : column + shipSize +1;
+      rightColumnToCheck = column + shipSize +1 >= this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN ? this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN -1 : column + shipSize +1;
     }
 
     for (let row = upRowToCheck; row <= downRowToCheck; row++) {
@@ -267,8 +267,8 @@ export class GameField extends EventObservable implements IObserver{
     while (shipsSizes.length > 0) {
       const shipSize = shipsSizes.pop() as number;
       while (true) {
-        const row = Math.floor(Math.random() * this.FIELD_SIZE);
-        const column = Math.floor(Math.random() * this.FIELD_SIZE);
+        const row = Math.floor(Math.random() * this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN);
+        const column = Math.floor(Math.random() * this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN);
         const isVertical = Math.floor(Math.random() * 2) === 0 ? true: false;
         if (this.positionIsAvailable(layout, shipSize, row, column, isVertical)) {
           layout[row][column] = shipSize;

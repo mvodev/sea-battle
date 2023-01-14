@@ -2,7 +2,7 @@ class Ship {
   private isVertical: boolean | undefined;
   private shipDiv: HTMLDivElement;
   private size!: number;
-  private shipSize = 30;
+  private SHIP_SIZE_IN_PX = 30;
 
   constructor(shipDiv:HTMLDivElement) {
     this.shipDiv = shipDiv;
@@ -90,8 +90,8 @@ class Ship {
     if (this.size === 1) {
       direction === 'leave' ? currentDroppable.classList.remove('active') :currentDroppable.classList.add('active');
     } else {
-      const cellsBefore = Math.floor(shiftX/this.shipSize);
-      const cellsAfter = Math.floor(((this.size * this.shipSize) - shiftX)/this.shipSize);
+      const cellsBefore = Math.floor(shiftX/this.SHIP_SIZE_IN_PX);
+      const cellsAfter = Math.floor(((this.size * this.SHIP_SIZE_IN_PX) - shiftX)/this.SHIP_SIZE_IN_PX);
       direction === 'leave' ? currentDroppable.classList.remove('active') :currentDroppable.classList.add('active');
       if (cellsBefore > 0) {
         let before = cellsBefore;
