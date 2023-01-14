@@ -6,6 +6,6 @@
     display: flex;
     flex-direction: row;
     gap: 10px;
-    height: $ship-size;
+    min-height: $ship-size;
   }
 }

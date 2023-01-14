@@ -3,6 +3,7 @@ class Ship {
   private shipDiv: HTMLDivElement;
   private size!: number;
   private SHIP_SIZE_IN_PX = 30;
+  private THRESHFOLD_OF_DETECTING_MOVE = 5;
 
   constructor(shipDiv:HTMLDivElement) {
     this.shipDiv = shipDiv;
@@ -27,17 +28,27 @@ class Ship {
   }
 
   private bindEvents() {
-    this.shipDiv.addEventListener('pointerdown', this.handlerShipClick.bind(this));
+    this.shipDiv.addEventListener('pointerdown', this.handlerShipClick);
+  }
+
+  private changeOrientation = () => {
+    this.shipDiv.classList.toggle('ship_is-vertical');
+    this.isVertical = !this.isVertical;
   }
   
-  private handlerShipClick(event:PointerEvent) {
+  private handlerShipClick = (event:PointerEvent) => {
+    const initialShiftX = event.clientX;
+    const initialShiftY = event.clientY;
     let shiftX = event.clientX - this.shipDiv.getBoundingClientRect().left;
     let shiftY = event.clientY - this.shipDiv.getBoundingClientRect().top;
-    this.shipDiv.style.position = 'absolute';
-    this.shipDiv.style.zIndex = '1000';
-    let currentDroppable: Element|null = null;
+    let currentDroppable: Element | null = null;
 
-    document.body.append(this.shipDiv);
+    if ((initialShiftX - event.clientX) > this.THRESHFOLD_OF_DETECTING_MOVE 
+      || (initialShiftY - event.clientY) > this.THRESHFOLD_OF_DETECTING_MOVE) {
+        this.shipDiv.style.position = 'absolute';
+        this.shipDiv.style.zIndex = '1000';
+        document.body.append(this.shipDiv);
+      }
 
     const moveAt = (pageX: number, pageY: number) =>  {
       this.shipDiv.style.left = pageX - shiftX + 'px';
@@ -47,6 +58,7 @@ class Ship {
     moveAt(event.pageX, event.pageY);
 
     const onPointerMove = (event: PointerEvent) => {
+      console.log('pointer move');
       moveAt(event.pageX, event.pageY);
       this.shipDiv.hidden = true;
       let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
@@ -70,11 +82,17 @@ class Ship {
 
     document.addEventListener('pointermove', onPointerMove);
 
-    const pointerUp = () => {
+    const onPointerUp = (event:PointerEvent) => {
+      console.log('on pointer UP');
+      if ((initialShiftX - event.clientX) < this.THRESHFOLD_OF_DETECTING_MOVE 
+      || (initialShiftY - event.clientY) < this.THRESHFOLD_OF_DETECTING_MOVE) {
+          this.changeOrientation();
+      }
       document.removeEventListener('pointermove', onPointerMove);
+      document.removeEventListener('pointerup', onPointerUp);
     }
 
-    document.addEventListener('pointerup', pointerUp);
+    document.addEventListener('pointerup', onPointerUp);
 
     this.shipDiv.ondragstart = () => {
       return false;
