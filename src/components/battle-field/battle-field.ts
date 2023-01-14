@@ -24,6 +24,10 @@ export class BattleField extends EventObservable implements IObserver{
     this.bindEventsListeners();
   }
 
+  private callback = (message: string | null) => {
+    console.log(message);
+  }
+
   handleEvent(eventType: MessagesType, message?: Message): void {
     switch(eventType) {
       case 'start':
@@ -131,7 +135,7 @@ export class BattleField extends EventObservable implements IObserver{
 
   private handleGenerateOwn = () => {
     this.notifyObservers('create layout');
-    document.querySelectorAll('.js-ship').forEach(elem => new Ship(elem as HTMLDivElement));
+    document.querySelectorAll('.js-ship').forEach(elem => new Ship(elem as HTMLDivElement,this.callback));
   }
 
   private handleStopGame = () => {

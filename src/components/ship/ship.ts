@@ -3,14 +3,16 @@ class Ship {
   private shipDiv: HTMLDivElement;
   private size!: number;
   private SHIP_SIZE_IN_PX = 30;
+  private callback: (message:string|null) => void;
   private THRESHFOLD_OF_DETECTING_MOVE = 5;// when click on ship its getting vertical or gorizontal
                                           // and this value as 5px need to detect whether we click on ship or
                                           // trying to move it
 
-  constructor(shipDiv:HTMLDivElement) {
+  constructor(shipDiv: HTMLDivElement, callback: (message:string | null) => void) {
     this.shipDiv = shipDiv;
     this.bindEvents();
     this.detectPositionAndSizeOfShips(this.shipDiv);
+    this.callback = callback;
   }
 
   private detectPositionAndSizeOfShips(shipDiv: HTMLDivElement) {
@@ -45,14 +47,13 @@ class Ship {
     let shiftY = event.clientY - this.shipDiv.getBoundingClientRect().top;
     let currentDroppable: Element | null = null;
 
-    if ((initialShiftX - event.clientX) > this.THRESHFOLD_OF_DETECTING_MOVE 
-      || (initialShiftY - event.clientY) > this.THRESHFOLD_OF_DETECTING_MOVE) {
+    const moveAt = (pageX: number, pageY: number) =>  {
+      if (Math.abs(initialShiftX - pageX) > this.THRESHFOLD_OF_DETECTING_MOVE 
+      || Math.abs(initialShiftY - pageY) > this.THRESHFOLD_OF_DETECTING_MOVE) {
         this.shipDiv.style.position = 'absolute';
         this.shipDiv.style.zIndex = '1000';
         document.body.append(this.shipDiv);
       }
-
-    const moveAt = (pageX: number, pageY: number) =>  {
       this.shipDiv.style.left = pageX - shiftX + 'px';
       this.shipDiv.style.top = pageY - shiftY + 'px';
     }
@@ -60,7 +61,6 @@ class Ship {
     moveAt(event.pageX, event.pageY);
 
     const onPointerMove = (event: PointerEvent) => {
-      console.log('pointer move');
       moveAt(event.pageX, event.pageY);
       this.shipDiv.hidden = true;
       let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
@@ -85,9 +85,8 @@ class Ship {
     document.addEventListener('pointermove', onPointerMove);
 
     const onPointerUp = (event:PointerEvent) => {
-      console.log('on pointer UP');
-      if ((initialShiftX - event.clientX) < this.THRESHFOLD_OF_DETECTING_MOVE 
-      || (initialShiftY - event.clientY) < this.THRESHFOLD_OF_DETECTING_MOVE) {
+      if (Math.abs(initialShiftX - event.clientX) < this.THRESHFOLD_OF_DETECTING_MOVE 
+      || Math.abs(initialShiftY - event.clientY) < this.THRESHFOLD_OF_DETECTING_MOVE) {
           this.changeOrientation();
       }
       document.removeEventListener('pointermove', onPointerMove);
@@ -107,35 +106,46 @@ class Ship {
     shiftX: number,
     shiftY: number,
     direction: 'leave' | 'enter') {
-    if (this.size === 1) {
-      direction === 'leave' ? currentDroppable.classList.remove('active') :currentDroppable.classList.add('active');
-    } else {
-      const cellsBefore = Math.floor(shiftX/this.SHIP_SIZE_IN_PX);
-      const cellsAfter = Math.floor(((this.size * this.SHIP_SIZE_IN_PX) - shiftX)/this.SHIP_SIZE_IN_PX);
-      direction === 'leave' ? currentDroppable.classList.remove('active') :currentDroppable.classList.add('active');
-      if (cellsBefore > 0) {
-        let before = cellsBefore;
-        let previosCell = currentDroppable.previousElementSibling;
-        while (before > 0) {
-          if (previosCell) {
-            direction === 'leave' ? previosCell.classList.remove('active') : previosCell.classList.add('active');
-            previosCell = previosCell.previousElementSibling;
-          }
-          before--;
-        }
+      let iDs = '';
+      iDs += currentDroppable.getAttribute('data-id') + ' '+this.isVertical + ' '+ this.size;
+      if (this.size !== 1) {
+        const cellsBefore = Math.floor(shiftX/this.SHIP_SIZE_IN_PX);
+        const cellsAfter = Math.floor(((this.size * this.SHIP_SIZE_IN_PX) - shiftX)/this.SHIP_SIZE_IN_PX);
+        iDs += 'cellsBefore '+cellsBefore;
+        iDs += 'cellAfter' + cellsAfter;
       }
-      if (cellsAfter > 0) {
-        let after = cellsAfter;
-        let afterCell = currentDroppable.nextElementSibling;
-        while (after > 0) {
-          if (afterCell) {
-            direction === 'leave' ? afterCell.classList.remove('active') : afterCell.classList.add('active');
-            afterCell = afterCell.nextElementSibling;
-          }
-          after--;
-        }
-      }  
-    }
+    // if (this.size === 1) {
+    //   // direction === 'leave' ? currentDroppable.classList.remove('active') :currentDroppable.classList.add('active');
+    // } else {
+    //   const cellsBefore = Math.floor(shiftX/this.SHIP_SIZE_IN_PX);
+    //   const cellsAfter = Math.floor(((this.size * this.SHIP_SIZE_IN_PX) - shiftX)/this.SHIP_SIZE_IN_PX);
+    //   direction === 'leave' ? currentDroppable.classList.remove('active') :currentDroppable.classList.add('active');
+    //   if (cellsBefore > 0) {
+    //     let before = cellsBefore;
+    //     let previosCell = currentDroppable.previousElementSibling;
+    //     while (before > 0) {
+    //       if (previosCell) {
+    //         //direction === 'leave' ? previosCell.classList.remove('active') : previosCell.classList.add('active');
+    //         iDs += '|~|'+previosCell?.getAttribute('data-id');
+    //         previosCell = previosCell.previousElementSibling;
+    //       }
+    //       before--;
+    //     }
+    //   }
+    //   if (cellsAfter > 0) {
+    //     let after = cellsAfter;
+    //     let afterCell = currentDroppable.nextElementSibling;
+    //     while (after > 0) {
+    //       if (afterCell) {
+    //         //direction === 'leave' ? afterCell.classList.remove('active') : afterCell.classList.add('active');
+    //         iDs += '|~|'+afterCell?.getAttribute('data-id');
+    //         afterCell = afterCell.nextElementSibling;
+    //       }
+    //       after--;
+    //     }
+    //   }  
+    // }
+    this.callback(iDs);
   }
 }
 export default Ship;
