@@ -3,7 +3,9 @@ class Ship {
   private shipDiv: HTMLDivElement;
   private size!: number;
   private SHIP_SIZE_IN_PX = 30;
-  private THRESHFOLD_OF_DETECTING_MOVE = 5;
+  private THRESHFOLD_OF_DETECTING_MOVE = 5;// when click on ship its getting vertical or gorizontal
+                                          // and this value as 5px need to detect whether we click on ship or
+                                          // trying to move it
 
   constructor(shipDiv:HTMLDivElement) {
     this.shipDiv = shipDiv;
