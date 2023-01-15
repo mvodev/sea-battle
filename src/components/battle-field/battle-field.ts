@@ -1,7 +1,7 @@
 import { MessagesType } from '../../controller/сontroller';
 import EventObservable, { Message } from '../../observers/EventObservable';
 import IObserver from '../../observers/IObserver';
-import Ship from '../ship/ship';
+import Ship, { CellDroppableInfo } from '../ship/ship';
 
 export class BattleField extends EventObservable implements IObserver{
   private generateBtn!: HTMLButtonElement | null;
@@ -24,10 +24,7 @@ export class BattleField extends EventObservable implements IObserver{
     this.bindEventsListeners();
   }
 
-  private callback = (message: Array<{
-    row:number;
-    column:number;
-  }>) => {
+  private callback = (message: CellDroppableInfo) => {
     console.log(message);
   }
 

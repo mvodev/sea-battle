@@ -1,20 +1,22 @@
+export type CellDroppableInfo = {
+    row:  number;
+    column: number;
+    isVertical: boolean;
+    cellsBefore: number;
+    cellsAfter: number;
+  }
+
 class Ship {
   private isVertical: boolean | undefined;
   private shipDiv: HTMLDivElement;
   private size!: number;
   private SHIP_SIZE_IN_PX = 30;
-  private callback: (message:Array<{
-    row:number;
-    column:number;
-  }>) => void;
+  private callback: (message: CellDroppableInfo) => void;
   private THRESHFOLD_OF_DETECTING_MOVE = 5;// when click on ship its getting vertical or gorizontal
                                           // and this value as 5px need to detect whether we click on ship or
                                           // trying to move it
 
-  constructor(shipDiv: HTMLDivElement, callback: (message:Array<{
-    row:number;
-    column:number;
-  }>) => void) {
+  constructor(shipDiv: HTMLDivElement, callback: (message:CellDroppableInfo) => void) {
     this.shipDiv = shipDiv;
     this.bindEvents();
     this.detectPositionAndSizeOfShips(this.shipDiv);
@@ -51,7 +53,6 @@ class Ship {
     const initialShiftY = event.clientY;
     let shiftX = event.clientX - this.shipDiv.getBoundingClientRect().left;
     let shiftY = event.clientY - this.shipDiv.getBoundingClientRect().top;
-    let currentDroppable: Element | null = null;
 
     const moveAt = (pageX: number, pageY: number) =>  {
       if (Math.abs(initialShiftX - pageX) > this.THRESHFOLD_OF_DETECTING_MOVE 
@@ -78,20 +79,6 @@ class Ship {
       if (droppableBelow) {
         this.handleDroppable(droppableBelow,shiftX,shiftY);
       }
-      // if (currentDroppable != droppableBelow) {
-
-      //   if (currentDroppable) {
-      //     this.handleDroppable(currentDroppable, shiftX, shiftY, 'leave');
-      //   }
-      //     currentDroppable = droppableBelow;
-      //     if(currentDroppable) {
-      //       this.handleDroppable(currentDroppable, shiftX, shiftX, 'enter');
-      //     }
-      //   // currentDroppable = droppableBelow;
-      //   // if (currentDroppable) {
-      //   //   this.handleDroppable(currentDroppable, shiftX, shiftX, 'enter');
-      //   // }
-      // }
     }
 
     document.addEventListener('pointermove', onPointerMove);
@@ -116,26 +103,31 @@ class Ship {
     currentDroppable: Element | null,
     shiftX: number,
     shiftY: number) {
-      const cells: Array<{
-        row:number;
-        column: number;
-      }> = [];
-      if (currentDroppable) {
-        const row = Number(currentDroppable.getAttribute('data-row'));
-        const column = Number(currentDroppable.getAttribute('data-column'));
-        cells.push({row,column});
-        let cellsAfterPointerPos = 0,cellsBeforePointerPos = 0;
-        if (this.size !== 1) {
-          if (this.isVertical) {
-            cellsBeforePointerPos = Math.floor(shiftY/this.SHIP_SIZE_IN_PX);
-            cellsAfterPointerPos = Math.floor(((this.size * this.SHIP_SIZE_IN_PX) - shiftY)/this.SHIP_SIZE_IN_PX);
-          } else {
-            cellsBeforePointerPos = Math.floor(shiftX/this.SHIP_SIZE_IN_PX);
-            cellsAfterPointerPos = Math.floor(((this.size * this.SHIP_SIZE_IN_PX) - shiftX)/this.SHIP_SIZE_IN_PX);
-          }
+    if (currentDroppable) {
+      const cellInfo = {
+        row: 0,
+        column: 0,
+        isVertical: false,
+        cellsBefore: 0,
+        cellsAfter: 0
+      };
+      cellInfo.row = Number(currentDroppable.getAttribute('data-row'));
+      cellInfo.column = Number(currentDroppable.getAttribute('data-column'));
+      cellInfo.isVertical = this.isVertical!;
+      let cellsAfterPointerPos = 0,cellsBeforePointerPos = 0;
+      if (this.size !== 1) {
+        if (this.isVertical) {
+          cellsBeforePointerPos = Math.floor(shiftY/this.SHIP_SIZE_IN_PX);
+          cellsAfterPointerPos = Math.floor(((this.size * this.SHIP_SIZE_IN_PX) - shiftY)/this.SHIP_SIZE_IN_PX);
+        } else {
+          cellsBeforePointerPos = Math.floor(shiftX/this.SHIP_SIZE_IN_PX);
+          cellsAfterPointerPos = Math.floor(((this.size * this.SHIP_SIZE_IN_PX) - shiftX)/this.SHIP_SIZE_IN_PX);
         }
+        cellInfo.cellsAfter = cellsAfterPointerPos;
+        cellInfo.cellsBefore = cellsBeforePointerPos;
       }
-    this.callback(cells);
+    this.callback(cellInfo);
+    }
   }
 }
 export default Ship;
