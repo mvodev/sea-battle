@@ -24,7 +24,10 @@ export class BattleField extends EventObservable implements IObserver{
     this.bindEventsListeners();
   }
 
-  private callback = (message: string | null) => {
+  private callback = (message: Array<{
+    row:number;
+    column:number;
+  }>) => {
     console.log(message);
   }
 
