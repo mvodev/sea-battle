@@ -9,8 +9,8 @@ export class GameField extends EventObservable implements IObserver{
   private TRIPLE_DECK: number;
   private QUAD_DECK: number;
   private IS_HEATED: number;
-  private enemyNumberOfShipsQuantity = 4 + 3*2 + 2*3 + 4*1;
-  private gamerNumberOfShipsQuantity = 4 + 3*2 + 2*3 + 4*1;
+  private enemyNumberOfShipsCells = 4 + 3*2 + 2*3 + 4*1;
+  private gamerNumberOfShipsCells = 4 + 3*2 + 2*3 + 4*1;
   private FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN = 10;
   private gamerLayout: number[][] = [];
   private enemyLayout: number[][] = [];
@@ -139,12 +139,12 @@ export class GameField extends EventObservable implements IObserver{
     }
     const isHitted = this.gamerLayout[row][column] !== this.EMPTY && this.gamerLayout[row][column] !== this.IS_HEATED;
     if (isHitted) {
-      this.gamerNumberOfShipsQuantity--;
+      this.gamerNumberOfShipsCells--;
       if (!this.alreadyHittedCell) {
         this.alreadyHittedCell = { row,column };
       }
     }
-    const isWin = this.gamerNumberOfShipsQuantity === 0;
+    const isWin = this.gamerNumberOfShipsCells === 0;
     return {
       row,
       column,
@@ -159,9 +159,9 @@ export class GameField extends EventObservable implements IObserver{
       const isHitted = this.enemyLayout[row][column] !== this.EMPTY && this.enemyLayout[row][column] !== this.IS_HEATED;
       if (isHitted) {
         this.enemyLayout[row][column] = this.IS_HEATED;
-        this.enemyNumberOfShipsQuantity--;
+        this.enemyNumberOfShipsCells--;
       } 
-      const isWin = this.enemyNumberOfShipsQuantity === 0;
+      const isWin = this.enemyNumberOfShipsCells === 0;
       return {row,column,isHitted,isWin}
     }
   }

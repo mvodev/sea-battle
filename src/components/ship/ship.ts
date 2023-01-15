@@ -98,7 +98,6 @@ class Ship {
     this.shipDiv.ondragstart = () => {
       return false;
     };
-
   }
 
   private handleDroppable (
