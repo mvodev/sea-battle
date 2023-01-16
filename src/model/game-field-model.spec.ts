@@ -135,11 +135,3 @@ describe('GameField class positionIsAvailable method test ', () => {
   });
 
 });
-
-describe('GameField class test returnPriorityGoalResults', () => {
-
-  it('check true equal true', async () => {
-    expect(true).toEqual(false);
-  });
-
-});
