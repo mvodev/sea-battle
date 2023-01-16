@@ -1,9 +1,4 @@
-export type CellDroppableInfo = {
-  row:  number;
-  column: number;
-  isVertical: boolean | undefined;
-  shipSize: number;
-}
+import { CellDroppableInfo } from "../../model/game-field-model";
 
 class Ship {
   private isVertical: boolean | undefined;

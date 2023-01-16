@@ -1,7 +1,23 @@
-import { CellDroppableInfo } from "../components/ship/ship";
 import { MessagesType } from "../controller/сontroller";
-import EventObservable, { Message } from "../observers/EventObservable";
+import EventObservable from "../observers/EventObservable";
 import IObserver from "../observers/IObserver";
+
+export type CellDroppableInfo = {
+  row:  number;
+  column: number;
+  isVertical: boolean | undefined;
+  shipSize: number;
+}
+
+export type Message = {
+  row?:number;
+  column?:number;
+  layout?:number[][];
+  isHitted?: boolean;
+  isWin?: boolean;
+  shipSize?:number;
+  isVertical?: boolean | undefined;
+}
 
 export class GameField extends EventObservable implements IObserver{
   private EMPTY: number;

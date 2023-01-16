@@ -1,14 +1,7 @@
 import { MessagesType } from '../controller/сontroller';
+import { Message } from '../model/game-field-model';
 import IObservable from './IObservable';
 import IObserver from './IObserver';
-
-export type Message = {
-  row?:number;
-  column?:number;
-  layout?:number[][];
-  isHitted?: boolean;
-  isWin?: boolean;
-}
 
 class EventObservable implements IObservable {
   private observers: Array<IObserver>;

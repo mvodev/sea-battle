@@ -1,7 +1,8 @@
 import { MessagesType } from '../../controller/сontroller';
-import EventObservable, { Message } from '../../observers/EventObservable';
+import { CellDroppableInfo, Message } from '../../model/game-field-model';
+import EventObservable from '../../observers/EventObservable';
 import IObserver from '../../observers/IObserver';
-import Ship, { CellDroppableInfo } from '../ship/ship';
+import Ship from '../ship/ship';
 
 export class BattleField extends EventObservable implements IObserver{
   private generateBtn!: HTMLButtonElement | null;
@@ -24,7 +25,8 @@ export class BattleField extends EventObservable implements IObserver{
     this.bindEventsListeners();
   }
 
-  private callback = (message: CellDroppableInfo) => {
+  private shipCallback = (message: CellDroppableInfo) => {
+    this.notifyObservers('create layout',message)
     console.log(message);
   }
 
@@ -138,7 +140,9 @@ export class BattleField extends EventObservable implements IObserver{
 
   private handleGenerateOwn = () => {
     this.notifyObservers('create layout');
-    document.querySelectorAll('.js-ship').forEach(elem => new Ship(elem as HTMLDivElement,this.callback));
+    document
+    .querySelectorAll('.js-ship')
+    .forEach(elem => new Ship(elem as HTMLDivElement,this.shipCallback));
   }
 
   private handleStopGame = () => {
