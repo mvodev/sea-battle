@@ -48,7 +48,7 @@ export class BattleField extends EventObservable implements IObserver{
         this.hideGamerCurtain();
         this.generateBtnDisappear();
         this.generateBtnByYourselfDisappear();
-        this.startGameButtonAppear();
+        this.startGameBtnRemove();
         break;
       case 'gamerturn':
         this.drawIfHitted(message,'gamerturn');
