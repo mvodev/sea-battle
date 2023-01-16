@@ -1,3 +1,4 @@
+import { CellDroppableInfo } from "../components/ship/ship";
 import { MessagesType } from "../controller/сontroller";
 import EventObservable, { Message } from "../observers/EventObservable";
 import IObserver from "../observers/IObserver";
@@ -166,10 +167,6 @@ export class GameField extends EventObservable implements IObserver{
     }
   }
 
-  getFieldSize() {
-    return this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN;
-  }
-
   private addCellsToPriorityGoals = () => {
     const rowHitted = this.alreadyHittedCell?.row!;
     const columnHitted = this.alreadyHittedCell?.column!;
@@ -213,6 +210,9 @@ export class GameField extends EventObservable implements IObserver{
     row: number,
     column: number,
     isVertical = true) {
+    if ((row < 0) || (column < 0)){
+      return false;
+    };
     if (isVertical && (row + shipSize -1) >= this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN ) {
       return false;
     }
@@ -250,7 +250,7 @@ export class GameField extends EventObservable implements IObserver{
     return true;
   }
 
-  generateLayout() {
+  private generateLayout() {
     const layout = this.initializeLayout();
     const shipsSizes = [
       this.DOUBLE_DECK,

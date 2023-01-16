@@ -1,10 +1,9 @@
 export type CellDroppableInfo = {
-    row:  number;
-    column: number;
-    isVertical: boolean;
-    cellsBefore: number;
-    cellsAfter: number;
-  }
+  row:  number;
+  column: number;
+  isVertical: boolean | undefined;
+  shipSize: number;
+}
 
 class Ship {
   private isVertical: boolean | undefined;
@@ -104,27 +103,33 @@ class Ship {
     shiftX: number,
     shiftY: number) {
     if (currentDroppable) {
-      const cellInfo = {
+      const cellInfo: CellDroppableInfo = {
         row: 0,
         column: 0,
         isVertical: false,
-        cellsBefore: 0,
-        cellsAfter: 0
+        shipSize:1
       };
-      cellInfo.row = Number(currentDroppable.getAttribute('data-row'));
-      cellInfo.column = Number(currentDroppable.getAttribute('data-column'));
-      cellInfo.isVertical = this.isVertical!;
+      const row = Number(currentDroppable.getAttribute('data-row'));
+      const column = Number(currentDroppable.getAttribute('data-column'));
+      cellInfo.isVertical = this.isVertical;
       let cellsAfterPointerPos = 0,cellsBeforePointerPos = 0;
       if (this.size !== 1) {
         if (this.isVertical) {
           cellsBeforePointerPos = Math.floor(shiftY/this.SHIP_SIZE_IN_PX);
           cellsAfterPointerPos = Math.floor(((this.size * this.SHIP_SIZE_IN_PX) - shiftY)/this.SHIP_SIZE_IN_PX);
+          cellInfo.row = row - cellsBeforePointerPos;
+          cellInfo.column = column;
         } else {
           cellsBeforePointerPos = Math.floor(shiftX/this.SHIP_SIZE_IN_PX);
           cellsAfterPointerPos = Math.floor(((this.size * this.SHIP_SIZE_IN_PX) - shiftX)/this.SHIP_SIZE_IN_PX);
+          cellInfo.row = row;
+          cellInfo.column = column - cellsBeforePointerPos;
         }
-        cellInfo.cellsAfter = cellsAfterPointerPos;
-        cellInfo.cellsBefore = cellsBeforePointerPos;
+        cellInfo.shipSize = cellsBeforePointerPos + cellsAfterPointerPos +1;
+      } else {
+        cellInfo.row = row;
+        cellInfo.column = column;
+        cellInfo.shipSize = 1;
       }
     this.callback(cellInfo);
     }
