@@ -39,7 +39,7 @@ export class BattleField extends EventObservable implements IObserver{
       case 'start game':
         this.generateBtnDisappear();
         this.generateBtnByYourselfDisappear();
-        this.startGameBtnRemove();
+        this.startGameBtnDissappear();
         this.stopGameBtnAppear();
         this.hideEnemyCurtain();
         this.showLabel();
@@ -48,7 +48,10 @@ export class BattleField extends EventObservable implements IObserver{
         this.hideGamerCurtain();
         this.generateBtnDisappear();
         this.generateBtnByYourselfDisappear();
-        this.startGameBtnRemove();
+        this.startGameBtnDissappear();
+        break;
+      case 'layout created':
+        this.startGameButtonAppear();
         break;
       case 'gamerturn':
         this.drawIfHitted(message,'gamerturn');
@@ -77,7 +80,7 @@ export class BattleField extends EventObservable implements IObserver{
         this.redrawEmptyField();
         this.generateBtnShow();
         this.generateBtnOwnShow();
-        this.startGameBtnRemove();
+        this.startGameBtnDissappear();
         this.stopGameBtnRemove();
         this.showEnemyCurtain();
         this.hideLabel();
@@ -210,7 +213,7 @@ export class BattleField extends EventObservable implements IObserver{
     this.startGameBtn?.classList.add('battle-field_game_on');
   }
 
-  private startGameBtnRemove() {
+  private startGameBtnDissappear() {
     this.startGameBtn?.classList.remove('battle-field_game_on');
   }
 

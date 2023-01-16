@@ -5,7 +5,15 @@ import { BattleField } from '../components/battle-field/battle-field';
 import IObserver from "../observers/IObserver";
 import EventObservable, { Message } from '../observers/EventObservable';
 
-export type MessagesType = 'gamerturn' | 'enemyturn' | 'result' | 'reset' | 'start' | 'start game' | 'create layout';
+export type MessagesType = 
+  'gamerturn'     |
+  'enemyturn'     |
+  'result'        |
+  'reset'         |
+  'start'         |
+  'start game'    |
+  'create layout' |
+  'layout created';
 export type FsmType = {
   transition: string; 
   from: string;
