@@ -26,8 +26,8 @@ export class BattleField extends EventObservable implements IObserver{
   }
 
   private shipCallback = (message: CellDroppableInfo) => {
-    this.notifyObservers('create layout',message)
-    console.log(message);
+    this.notifyObservers('create layout', message);
+    // console.log(message);
   }
 
   handleEvent(eventType: MessagesType, message?: Message): void {
@@ -38,7 +38,7 @@ export class BattleField extends EventObservable implements IObserver{
         this.generateBtnByYourselfRemove();
         this.startGameButtonAppear();
         break;
-      case 'start game':
+      case 'init game':
         this.generateBtnDisappear();
         this.generateBtnByYourselfDisappear();
         this.startGameBtnDissappear();
@@ -51,6 +51,8 @@ export class BattleField extends EventObservable implements IObserver{
         this.generateBtnDisappear();
         this.generateBtnByYourselfDisappear();
         this.startGameBtnDissappear();
+        console.log('message inside battle field');
+        console.log(message);
         break;
       case 'layout created':
         this.startGameButtonAppear();
@@ -150,7 +152,7 @@ export class BattleField extends EventObservable implements IObserver{
   }
 
   private handleStartGame = () => {
-    this.notifyObservers('start game');
+    this.notifyObservers('init game');
   }
 
   private redrawEmptyField = () => {

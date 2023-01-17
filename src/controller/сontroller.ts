@@ -1,9 +1,9 @@
 import StateMachine from 'javascript-state-machine';
 
-import { GameField } from "../model/game-field-model";
+import { GameField, Message } from "../model/game-field-model";
 import { BattleField } from '../components/battle-field/battle-field';
 import IObserver from "../observers/IObserver";
-import EventObservable, { Message } from '../observers/EventObservable';
+import EventObservable from '../observers/EventObservable';
 
 export type MessagesType = 
   'gamerturn'     |
@@ -11,7 +11,7 @@ export type MessagesType =
   'result'        |
   'reset'         |
   'start'         |
-  'start game'    |
+  'init game'    |
   'create layout' |
   'layout created';
 export type FsmType = {
@@ -35,6 +35,7 @@ class Controller extends EventObservable implements IObserver{
       transitions: [
         { name: 'starting', from: 'start', to: 'generate' },
         { name: 'creating', from: 'start', to: 'create' },
+        { name: 'placing', from: 'create', to: 'create' },
         { name: 'generating', from: 'generate', to: 'generate' },
         { name: 'game', from: ['generate','create'], to: 'gamerturn' },
         { name: 'resulting',   from: ['gamerturn','enemyturn'], to: 'result' },
@@ -45,6 +46,7 @@ class Controller extends EventObservable implements IObserver{
       methods: {
         onStarting: this.onStarting,
         onCreating: this.onCreating,
+        onPlacing: this.onPlacing,
         onGenerating: this.onStarting,
         onGame: this.onGame,
         onResult: () => console.log('on result'),
@@ -64,11 +66,13 @@ class Controller extends EventObservable implements IObserver{
       this.fsm.starting();
     } else if (eventType === 'start') {
       this.fsm.generating();
-    } else if (eventType === 'start game') {
+    } else if (eventType === 'init game') {
       this.fsm.game();
     } else if (eventType === 'gamerturn') {
       this.fsm.enemy(message);
-    } else if (eventType === 'create layout') {
+    } else if (eventType === 'create layout' && this.fsm.state === 'create') {
+      this.fsm.placing(message);
+    } else if (eventType === 'create layout' && this.fsm.state !== 'create') {
       this.fsm.creating();
     } else if (eventType === 'enemyturn') {
       this.fsm.gamer(message);
@@ -81,16 +85,23 @@ class Controller extends EventObservable implements IObserver{
     this.notifyObservers('start');
   }
 
+  private onPlacing = (transtition: FsmType, message: Message) => {
+    console.log('notify inside controller');
+    console.log(message);
+    console.log('-------------------------')
+    this.notifyObservers('create layout', message);
+  }
+
   private onGame = () => {
-    this.notifyObservers('start game');
+    this.notifyObservers('init game');
   }
 
   private onReset = () => {
     this.notifyObservers('reset');
   }
 
-  private onCreating = () => {
-    this.notifyObservers('create layout');
+  private onCreating = (transtition: FsmType, message: Message) => {
+    this.notifyObservers('create layout', message);
   }
 
   private onEnemyTurn = (transtition: FsmType, message: Message) => {

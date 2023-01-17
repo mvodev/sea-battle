@@ -17,6 +17,7 @@ export type Message = {
   isWin?: boolean;
   shipSize?:number;
   isVertical?: boolean | undefined;
+  posIsAvailable?: boolean;
 }
 
 export class GameField extends EventObservable implements IObserver{
@@ -31,6 +32,7 @@ export class GameField extends EventObservable implements IObserver{
   private FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN = 10;
   private gamerLayout: number[][] = [];
   private enemyLayout: number[][] = [];
+  private gameFieldInitByUser = false;
   private alreadyHittedCell:{
     row:number;
     column: number;
@@ -49,24 +51,37 @@ export class GameField extends EventObservable implements IObserver{
     this.TRIPLE_DECK = 3;
     this.QUAD_DECK = 4;
     this.IS_HEATED = 5;
+
+    this.enemyLayout = this.initializeLayout();
+    this.gamerLayout = this.initializeLayout();
   }
 
   handleEvent(eventType: MessagesType, message?: Message): void {
     switch(eventType) {
       case 'start':
-        this.gamerLayout = this.generateLayout();
-        this.enemyLayout = this.generateLayout();
+        console.log('model start');
+        if (!this.gameFieldInitByUser) this.gamerLayout = this.generateLayout();
         this.notifyObservers('start', {
           layout: this.gamerLayout 
         });
         break;
-      case 'start game':
+      case 'init game':
         this.enemyLayout = this.generateLayout();
         this.gamerLayout = this.initializeLayout();
-        this.notifyObservers('start game');
+        this.notifyObservers('init game');
         break;
       case 'create layout':
-        this.notifyObservers('create layout');
+        this.gameFieldInitByUser = true;
+        console.log('inside model create layout');
+        console.log(message);
+        console.log('----------------------------');
+        if (message) {
+          const {row,column,isVertical,shipSize} = message;
+          if (row !==undefined && column !==undefined && shipSize !==undefined) {
+            const posIsAvailable = this.positionIsAvailable(this.enemyLayout, shipSize, row, column, isVertical);
+            this.notifyObservers('create layout',{ row, column, isVertical, shipSize, posIsAvailable });
+          }
+        } else this.notifyObservers('create layout');
         break;
       case 'gamerturn':
         if (message) {
@@ -77,6 +92,7 @@ export class GameField extends EventObservable implements IObserver{
         }
         break;
       case 'reset':
+        this.gameFieldInitByUser = false;
         this.gamerLayout = [];
         this.enemyLayout = [];
         this.notifyObservers('reset');
@@ -226,9 +242,13 @@ export class GameField extends EventObservable implements IObserver{
     row: number,
     column: number,
     isVertical = true) {
+      console.log('inside pos is available');
+      console.log(layout);
+
     if ((row < 0) || (column < 0)){
       return false;
     };
+
     if (isVertical && (row + shipSize -1) >= this.FIELD_NUMBER_OF_CELLS_IN_ROW_OR_COLUMN ) {
       return false;
     }
