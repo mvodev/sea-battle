@@ -1,14 +1,10 @@
 import LoginPage from '../pageobjects/login.page'
-import SecurePage from '../pageobjects/secure.page'
 
-describe('My Login application', () => {
-    it('should login with valid credentials', async () => {
-        await LoginPage.open()
-
-        await LoginPage.login('tomsmith', 'SuperSecretPassword!')
-        await expect(SecurePage.flashAlert).toBeExisting()
-        await expect(SecurePage.flashAlert).toHaveTextContaining(
-            'You logged into a secure area!')
+describe('My Game', () => {
+    it('should remove create layout btn when click on it', async () => {
+        await LoginPage.open();
+        await LoginPage.clickOnCreateLayoutBtn();
+        expect((await (await LoginPage.buttonCreateLayout).getAttribute('class')).includes('battle-field_layout-is-active')).toBe(true);
     })
 })
 
