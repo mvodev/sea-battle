@@ -147,6 +147,10 @@
     background-color: $battle-field-border-color;
   }
 
+  &__possible-ship {
+    background-color: rgb(30, 115, 30);
+  }
+
   &__stop-btn {
     width: 200px;
     position: relative;

@@ -86,9 +86,6 @@ class Controller extends EventObservable implements IObserver{
   }
 
   private onPlacing = (transtition: FsmType, message: Message) => {
-    console.log('notify inside controller');
-    console.log(message);
-    console.log('-------------------------')
     this.notifyObservers('create layout', message);
   }
 

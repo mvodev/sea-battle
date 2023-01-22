@@ -7,6 +7,8 @@ export type CellDroppableInfo = {
   column: number;
   isVertical: boolean | undefined;
   shipSize: number;
+} | {
+  dropped?: boolean
 }
 
 export type Message = {
@@ -18,6 +20,7 @@ export type Message = {
   shipSize?:number;
   isVertical?: boolean | undefined;
   posIsAvailable?: boolean;
+  dropped?: boolean;
 }
 
 export class GameField extends EventObservable implements IObserver{
@@ -59,7 +62,6 @@ export class GameField extends EventObservable implements IObserver{
   handleEvent(eventType: MessagesType, message?: Message): void {
     switch(eventType) {
       case 'start':
-        console.log('model start');
         if (!this.gameFieldInitByUser) this.gamerLayout = this.generateLayout();
         this.notifyObservers('start', {
           layout: this.gamerLayout 
@@ -72,16 +74,13 @@ export class GameField extends EventObservable implements IObserver{
         break;
       case 'create layout':
         this.gameFieldInitByUser = true;
-        console.log('inside model create layout');
-        console.log(message);
-        console.log('----------------------------');
-        if (message) {
+        if (message && !message.dropped) {
           const {row,column,isVertical,shipSize} = message;
           if (row !==undefined && column !==undefined && shipSize !==undefined) {
             const posIsAvailable = this.positionIsAvailable(this.enemyLayout, shipSize, row, column, isVertical);
             this.notifyObservers('create layout',{ row, column, isVertical, shipSize, posIsAvailable });
           }
-        } else this.notifyObservers('create layout');
+        } else this.notifyObservers('create layout',{dropped:true});
         break;
       case 'gamerturn':
         if (message) {
@@ -242,9 +241,6 @@ export class GameField extends EventObservable implements IObserver{
     row: number,
     column: number,
     isVertical = true) {
-      console.log('inside pos is available');
-      console.log(layout);
-
     if ((row < 0) || (column < 0)){
       return false;
     };

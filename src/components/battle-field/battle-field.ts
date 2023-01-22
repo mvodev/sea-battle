@@ -27,7 +27,6 @@ export class BattleField extends EventObservable implements IObserver{
 
   private shipCallback = (message: CellDroppableInfo) => {
     this.notifyObservers('create layout', message);
-    // console.log(message);
   }
 
   handleEvent(eventType: MessagesType, message?: Message): void {
@@ -51,8 +50,7 @@ export class BattleField extends EventObservable implements IObserver{
         this.generateBtnDisappear();
         this.generateBtnByYourselfDisappear();
         this.startGameBtnDissappear();
-        console.log('message inside battle field');
-        console.log(message);
+        this.markAsShipCells(message);
         break;
       case 'layout created':
         this.startGameButtonAppear();
@@ -98,6 +96,31 @@ export class BattleField extends EventObservable implements IObserver{
 
   private hideGamerCurtain() {
     this.gamerCurtain?.classList.remove('battle-field__cirtain_is-visible');
+  }
+
+  private markAsShipCells(message: Message | undefined) {
+    if (message && !message.dropped) {
+      const {row, column, isVertical, posIsAvailable, shipSize} = message;
+      if (row!==undefined && column !== undefined && posIsAvailable !== undefined) {
+        this.gamerCells.forEach(cell => {
+          cell.classList.remove('battle-field__possible-ship');
+        })
+        this.gamerCells.forEach(cell => {
+          if (cell.getAttribute('data-row') && cell.getAttribute('data-column') &&
+              Number(cell.getAttribute('data-row')) === row && 
+              Number(cell.getAttribute('data-column')) === column) {
+                cell.classList.add('battle-field__possible-ship');
+          }
+        })
+      }
+    } else if (message && message.dropped === true) {
+      this.gamerCells.forEach(cell => {
+        if (cell.classList.contains('battle-field__possible-ship')) {
+          cell.classList.remove('battle-field__possible-ship');
+          cell.classList.add('battle-field__ship')
+        }
+      })
+    }
   }
 
   private showWin(message: Message | undefined, field: 'gamerturn' | 'enemyturn') {
@@ -224,7 +247,7 @@ export class BattleField extends EventObservable implements IObserver{
   }
 
   private stopGameBtnAppear() {
-    this.stopGameBtn?.classList.add('battle-field_game_on');
+    this.stopGameBtn?.classList.remove('battle-field_game_on');
   }
 
   private stopGameBtnRemove() {

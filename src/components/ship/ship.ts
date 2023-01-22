@@ -82,6 +82,9 @@ class Ship {
       && Math.abs(initialShiftY - event.clientY) < this.THRESHFOLD_OF_DETECTING_MOVE) {
           this.changeOrientation();
       }
+      this.callback({ 
+        dropped: true,
+      });
       document.removeEventListener('pointermove', onPointerMove);
       document.removeEventListener('pointerup', onPointerUp);
     }
